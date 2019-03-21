@@ -1,0 +1,122 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <div class="main-header">
+                <h4>{{ app|capfirst }}</h4>
+                <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="icofont icofont-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"> {{ app|capfirst }} </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#">
+                        {% if user_obj  %} Edit  {% else %} Add  {% endif %}
+                    </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <legend class="border-bottom mb-4">{% if user_obj  %} Edit  {{ app|capfirst }}  {% else %} Add {{ app|capfirst }} {% endif %}</legend>
+                    <ul class="nav nav-tabs md-tabs " role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#basic_info" role="tab">
+                        <i class="icofont icofont-info-circle"></i> Basic Info</a>
+                        <div class="slide"></div>
+                      </li>
+                      {% if profile_form %}
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#user_profile" role="tab">
+                        <i class="icofont icofont-ui-user"></i> Profile</a>
+                        <div class="slide"></div>
+                      </li>
+                      {% endif %}
+                    </ul>
+                    <div class="tab-content">
+                        {% include "users/user/add_user.html" %}
+                        {% if profile_form %}
+                            {% include "users/user/add_profile.html" %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+<script>
+    jQuery(document).ready(function($) {
+        function Validate() {
+            var password = document.getElementById("id_password1").value;
+            var confirmPassword = document.getElementById("id_password2").value;
+            if (password != confirmPassword) {
+                $("#error").text("Passwords do not match.");// we will update validation for rest frame work latter
+                return false;
+            }
+
+            return true;
+        }
+        
+        function saveFormData(url, btnEl, method_type){
+           // if( Validate() === true ) {
+
+            // check for required fields
+            if(!checkRequiredFields(btnEl.parents('form'))) return false;
+
+            var array = btnEl.parents('form').serializeArray();
+            var from_data = {};
+            jQuery.each(array, function () {
+                from_data[this.name] = this.value || '';
+            });
+            console.log(from_data);
+            console.log(method_type);
+            $.ajax({
+               type: method_type,
+               url: url,
+               headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
+               data: JSON.stringify(from_data),
+               success: function (data) {
+                   // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                if(btnEl.hasClass('next'))
+                    $('.nav.nav-pills a[href="#user_profile"]').tab('show');
+                else
+                   window.location.href = "{% url 'users_listing' %}";
+
+                }
+            });
+        }
+
+
+        jQuery(document).on('click','.save-basic',function(e){
+            e.preventDefault();
+            {% if user_obj %}
+                var url = "{% url app_url %}"+'/'+"{{user_obj.id}}"+'/';
+            {% else %}
+                var url = "{% url app_url %}";
+            {% endif %}
+            var method_type = "{{type}}";
+            saveFormData(url, $(this), method_type);
+        })
+
+        jQuery(document).on('click','.save-profile',function(e){
+            e.preventDefault();
+            {% if profile is not None %}
+                var profile_url = "{% url 'profiles' %}"+'/'+"{{user_obj.id}}"+'/';
+                var method_type = 'PUT';
+            {% else %}
+                var method_type = 'POST';
+                var profile_url = "{% url 'profiles' %}";
+            {% endif %}
+            saveFormData(profile_url, $(this), method_type);
+        })
+    });
+</script>
+{% endblock %}

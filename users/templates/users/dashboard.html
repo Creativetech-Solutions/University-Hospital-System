@@ -1,0 +1,228 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .latest-records-wrap{padding-left:2px;padding-right:2px;}
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="main-header">
+            <h4>Dashboard </h4>
+        </div>
+    </div>
+    <!-- 4-blocks row start -->
+    <div class="row dashboard-header">
+        <div class="col-lg-3 col-md-4">
+            <div class="card dashboard-product">
+                <span>Users</span>
+                <h2 class="dashboard-total-products total_students"></h2>
+                <span class="label label-success"></span>
+                <div class="side-box">
+                    <i class="ti-user text-success-color"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4">
+            <div class="card dashboard-product">
+                <span>Hospitals</span>
+                <h2 class="dashboard-total-products total_hospitals"></h2>
+                <span class="label label-warning"></span>
+                <div class="side-box">
+                    <i class="ti-layout-list-post   text-warning-color"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4">
+            <div class="card dashboard-product">
+                <span>Appointments</span>
+                <h2 class="dashboard-total-products total_appointments"></h2>
+                <span class="label label-danger"></span>
+                <div class="side-box">
+                    <i class="ti-receipt text-danger-color"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4">
+            <div class="card dashboard-product">
+                <span>Doctors</span>
+                <h2 class="dashboard-total-products total_doctors"></h2>
+                <span class="label label-primary"></span>
+                <div class="side-box ">
+                    <i class="ti-user text-primary-color"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 4-blocks row end -->
+
+
+    <!-- 2-1 block start -->
+    <div class="row">
+        <div class="col-xl-4 col-lg-12" >
+            <div class="card">
+                <div class="card-block">
+
+                    <div class="table-responsive">
+                        <h6 class="p-20">Users</h6>
+                        <table cellspacing="0" id="users"  class="datatable table table-small-font table-bordered table-striped">
+                            <thead>
+                            <tr>
+
+                                <th data-priority="2">Name</th>
+                                <th data-priority="5">Email</th>
+                                <th data-priority="6">Status</th>
+                            </tr>
+                            </thead>
+
+                        </table>
+                        <h6 class="p-l-20"><a href="{% url 'users_listing' %}">View all</a></h6>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12 latest-records-wrap">
+            <div class="card">
+                <div class="card-block">
+
+                    <div class="table-responsive">
+                        <h6 class="p-20">Hospitals</h6>
+                        <table cellspacing="0" id="hospitals"  class="datatable table table-small-font table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th data-priority="2">Name</th>
+                                <th data-priority="2">Detail</th>
+                                <th data-priority="6">Status</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <h6 class="p-l-20"><a href="{% url 'hospitals-listing' %}">View all</a></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12">
+            <div class="card">
+                <div class="card-block">
+
+                    <div class="table-responsive">
+                        <h6 class="p-20">Appointments</h6>
+                        <table cellspacing="0" id="appointments"  class="datatable table table-small-font table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th data-priority="2">Student</th>
+                                <th data-priority="6">Doctor</th>
+                                <th data-priority="6">Date Time</th>
+                                <th data-priority="6">Disease</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <h6 class="p-l-20"><a href="{% url 'appointments_listing' %}">View all</a></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 2-1 block end -->
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% csrf_token %}
+<script>
+    jQuery(document).ready(function($) {
+        var table = $('#users').DataTable({
+            "dom": '<"top">t<"bottom"><"clear">',
+            "serverSide": true,
+            "responsive": true,
+            "pageLength":5,
+            "ajax":{
+              url:"api/users?format=datatables&ordering=-id", headers: { 'Authorization': 'Token {{request|getToken}}' },
+            },
+            "columns": [
+
+                {"data": "username"},
+                {"data": "email"},
+                {
+                    data: "is_active",
+                    render: function ( data, type, row, meta ) {
+                        var status,StatusClass = '';
+                        if(row.is_active === true ){
+                            status = 'Active';
+                            StatusClass='btn-success';
+                        }else{
+                            status = 'In-Active';
+                            StatusClass='btn-danger';
+                        }
+                        return '<button class="tabledit-edit-button btn btn-mini waves-effect waves-light '+StatusClass+'">'+ status +'</button>';
+                    }
+                },
+            ],
+        });
+
+        var table = $('#hospitals').DataTable({
+            "dom": '<"top">t<"bottom"><"clear">',
+            "serverSide": true,
+            "responsive": true,
+            "pageLength":5,
+            "ajax":{
+                url:"api/hospitals?format=datatables&ordering=-id", headers: { 'Authorization': 'Token {{request|getToken}}' },
+            },
+            "columns": [
+                {"data": "name"},
+                {"data": "detail"},
+                {
+                    data: "status",
+                    render: function ( data, type, row, meta ) {
+                        var status,StatusClass = '';
+                        if(row.status === true ){
+                            status = 'Active';
+                            StatusClass='btn-success';
+                        }else{
+                            status = 'In-Active';
+                            StatusClass='btn-danger';
+                        }
+                        return '<button class="tabledit-edit-button btn btn-mini waves-effect waves-light '+StatusClass+'">'+ status +'</button>';
+                    }
+                },
+
+
+            ],
+
+        });
+
+        var table = $('#appointments').DataTable({
+            "dom": '<"top">t<"bottom"><"clear">',
+            "serverSide": true,
+            "responsive": true,
+            "pageLength":5,
+            "ajax":{
+                url:"api/appointments?format=datatables&ordering=-id", headers: { 'Authorization': 'Token {{request|getToken}}' },
+            },
+            "columns": [
+
+                {"data": "student"},
+                {"data": "doctor"},
+                {
+                    data: "datetime",
+                    render: function ( data, type, row, meta ) {
+                       return  row.datetime;
+                    }
+                },
+                {"data": "disease"},
+            ],
+        });
+        setTimeout(function(){
+            $('.total_hospitals').text($('#hospitals').DataTable().page.info().recordsTotal);
+            $('.total_doctors').text(5);
+            $('.total_students').text($('#users').DataTable().page.info().recordsTotal);
+            $('.total_appointments').text($('#appointments').DataTable().page.info().recordsTotal);
+        },500);
+    });
+</script>
+
+{% endblock %}

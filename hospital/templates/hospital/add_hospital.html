@@ -1,0 +1,75 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <div class="main-header">
+                <h4>{{ app|capfirst }}</h4>
+                <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="icofont icofont-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!"> {{ app|capfirst }} </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#">
+                        {% if obj.id  %} Edit  {% else %} Add  {% endif %}
+                    </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-block">
+                        <form method="POST" class="form" action="{% url app %}">
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">{% if obj.id  %} Edit  {{ app|capfirst }}  {% else %} Add {{ app|capfirst }} {% endif %}</legend>
+                                    {{ form|crispy }}
+                            </fieldset>
+                            <div class="form-group">
+                                <button class="btn btn-info save" type="submit">Save </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+<script>
+    jQuery(document).ready(function($) {
+        var id = false;
+        var url ='';
+        id = "{{obj.id}}";
+        if(id){
+            url = "{% url app_url %}"+'/'+"{{obj.id}}"+'/';
+        }else{
+            url = "{% url app_url %}";
+        }
+        $(document).on('click','.save',function(e){
+            e.preventDefault();
+            var array = $('form.form').serializeArray();
+            var from_data = {};
+            jQuery.each(array, function() {
+                from_data[this.name] = this.value || '';
+            });
+            $.ajax({
+                type:'{{type}}',
+                url:url,
+                headers: { 'Authorization': "Token {{request|getToken}}",'Content-Type': 'application/json'},
+                data:JSON.stringify(from_data),
+                success:function(date){
+                    window.location.href="{% url 'hospitals-listing' %}";
+                }
+            });
+        })
+    });
+</script>
+{% endblock %}

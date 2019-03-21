@@ -1,0 +1,137 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Quantum Able Bootstrap 4 Admin Dashboard Template by Phoenixcoded</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <!-- Favicon icon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'assets/images/favicon.ico' %}" type="image/x-icon">
+
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700" rel="stylesheet">
+
+    <!-- themify -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/themify-icons/themify-icons.css' %}">
+
+    <!-- iconfont -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/icofont/css/icofont.css' %}">
+
+    <!-- simple line icon -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/simple-line-icons/css/simple-line-icons.css' %}">
+
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/main.css' %}">
+
+    <!-- Responsive.css-->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/responsive.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'custom.css' %}">
+</head>
+<body>
+{% load crispy_forms_tags %}
+{% load static %}
+<section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+    <!-- Container-fluid starts -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="login-card card-block">
+                    <form class="login-form" action="api/login"  method="POST">
+                        <div class="text-center">
+                            <img src="{% static 'assets/images/logo-black.png' %}">
+                        </div>
+                        <h3 class="text-center txt-primary">
+                            Sign In to your account {{token}}
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="md-input-wrapper">
+                                    <input type="text" name="username"  value="" class="md-form-control" required="required"/>
+                                    <label>User Name </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="md-input-wrapper">
+                                    <input type="password" name="password" value="" class="md-form-control" required="required"/>
+                                    <label>Password</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-xs-12 forgot-phone text-right">
+                                <a href="forgot-password.html" class="text-right f-w-600"> Forget Password?</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10 offset-xs-1">
+                              <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20 login-btn">LOGIN</button>
+                            </div>
+                        </div>
+                        <!-- <div class="card-footer"> -->
+                        <div class="col-sm-12 col-xs-12 text-center">
+                            <span class="text-muted">Don't have an account?</span>
+                            <a href="register2.html" class="f-w-600 p-l-5">Sign up Now</a>
+                        </div>
+
+                        <!-- </div> -->
+                    </form>
+                    <!-- end of form -->
+                </div>
+                <!-- end of login-card -->
+            </div>
+            <!-- end of col-sm-12 -->
+        </div>
+        <!-- end of row -->
+    </div>
+    <!-- end of container-fluid -->
+</section>
+
+
+<script src="{% static 'bower_components/Jquery/dist/jquery.min.js' %}"></script>
+<!-- Required Fremwork -->
+<script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery.toaster.js' %}"></script>
+<!-- custom js -->
+<script src="{% static 'custom.js' %}"></script>
+<script>
+    $(document).on('click','.login-btn', function(e){
+        e.preventDefault();
+        var array = $('form.login-form').serializeArray();
+        var from_data = {};
+        jQuery.each(array, function() {
+            from_data[this.name] = this.value || '';
+        });
+        $.ajax({
+            url:'/api/login',
+            type:'POST',
+            data: from_data,
+            beforeSend:function(data){
+            },
+            success:function(data){
+                if(data['type'] == 'success'){
+                    window.location.assign(data['redirect']);
+                } else {
+                    $.toaster({ priority : 'danger', title : 'Status', message : data['message']});
+                }
+            },
+            error:function(data){
+                response = data['responseJSON'];
+                $.toaster({ priority : 'danger', title : 'Status', message : response['message']});
+
+            }
+        })
+    })
+
+</script>
+
+</body>
+
+</html>

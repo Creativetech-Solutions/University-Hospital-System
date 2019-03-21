@@ -1,0 +1,107 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <div class="main-header">
+                <h4>Students</h4>
+                <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="icofont icofont-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Students</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#">List</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- Row end -->
+
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-header-text">Students List</h5></div>
+                <div class="card-block">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table cellspacing="0" id="students"  class="datatable table table-small-font table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th data-priority="1">ID</th>
+                                <th data-priority="2">User Name</th>
+                                <th data-priority="3">First Name</th>
+                                <th data-priority="4">Last Name</th>
+                                <th data-priority="5">Email</th>
+                                <th data-priority="5">Title</th>
+                                <th data-priority="5">Gender</th>
+                                <th data-priority="5">Mobile No</th>
+                                <th data-priority="6">Status</th>
+                                <th data-priority="6">Action</th>
+
+
+
+
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Row end -->
+</div>
+{% endblock %}
+{% block footer %}
+<script>
+    jQuery(document).ready(function($) {
+        var table = $('#students').DataTable({
+            "serverSide": true,
+            "responsive": true,
+            "ajax":{
+                url:"api/students?format=datatables", headers: { 'Authorization': 'Token {{token}}' },
+            },
+            "columns": [
+                {"data": "user_id", "searchable": false},
+                {"data": "user"},
+                {"data": "first_name"},
+                {"data": "last_name"},
+                {"data": "email"},
+                {"data": "title"},
+                {"data": "gender"},
+                {"data": "mobile_no"},
+                {
+                data: "is_active",
+                    render: function ( data, type, row, meta ) {
+                        var status,StatusClass = '';
+                        if(row.is_active === true ){
+                            status = 'Active';
+                            StatusClass='btn-success';
+                        }else{
+                            status = 'In-Active';
+                            StatusClass='btn-danger';
+                        }
+                        return '<button class="tabledit-edit-button btn btn-mini waves-effect waves-light '+StatusClass+'">'+ status +'</button>';
+                    }
+                },
+                {
+                    data: "action",
+                    render: function ( data, type, row, meta ) {
+                        return '<button  class="tabledit-edit-button btn btn-mini btn-primary waves-effect waves-light"><span class="icofont icofont-ui-edit"></span></button>' +
+                                '<button  class="tabledit-delete-button btn btn-mini btn-danger waves-effect waves-light"><span class="icofont icofont-ui-delete"></span></button>';
+                    }
+                },
+
+            ],
+        });
+    });
+</script>
+
+{% endblock %}

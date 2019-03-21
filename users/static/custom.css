@@ -1,0 +1,14 @@
+/*Custom css*/
+
+div.dataTables_paginate,div.dataTables_filter {
+    float: right;
+}
+.dataTables_length label{
+    display: inline-flex;
+}
+a.tabledit-edit-button.btn.btn-primary.waves-effect.waves-light {
+    margin-right: 5px;
+}
+.login-card {
+    margin: 0 auto;
+}

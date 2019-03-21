@@ -1,0 +1,14 @@
+{
+  "name": "alloy-ui",
+  "homepage": "https://github.com/liferay/alloy-ui",
+  "version": "1.5.3",
+  "_release": "1.5.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.5.3",
+    "commit": "bfc5ae9b5b087893dbdb4d9007c0df13a18dcb00"
+  },
+  "_source": "https://github.com/liferay/alloy-ui.git",
+  "_target": "1.5.3",
+  "_originalSource": "alloy-ui"
+}

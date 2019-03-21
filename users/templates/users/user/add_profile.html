@@ -1,0 +1,14 @@
+{% load crispy_forms_tags %}
+ <div id="user_profile" class="tab-pane container fade">
+    <div class="card-block">
+        <form method="POST" class="profile_form" action="{% url app %}">
+            <fieldset class="form-group">
+                {% crispy profile_form %}
+                <div class="form-group">
+                    <button class="btn btn-info save-profile" type="submit">Save </button>
+                    <p class="text-danger" id="error"> </p>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

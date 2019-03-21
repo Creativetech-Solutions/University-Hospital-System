@@ -1,0 +1,140 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <div class="main-header">
+                <h4>Users</h4>
+                <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="icofont icofont-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Users</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#">List</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- Row end -->
+
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                     <h5 class="card-header-text">Users List</h5></div>
+                <div class="card-block">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table cellspacing="0" id="albums"  class="datatable table table-small-font table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th data-priority="1">ID</th>
+                                <th data-priority="2">Username</th>
+                                <th data-priority="3">First Name</th>
+                                <th data-priority="4">Last Name</th>
+                                <th data-priority="5">Email</th>
+                                <th data-priority="5">Type</th>
+                                <th data-priority="6">Status</th>
+                                <th data-priority="6">Action</th>
+
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Row end -->
+</div>
+{% endblock %}
+{% block footer %}
+<script>
+    jQuery(document).ready(function($) {
+        var table = $('#albums').DataTable({
+            "serverSide": true,
+            "responsive": true,
+            "ajax":{
+                url:"api/users?format=datatables", headers: { 'Authorization': 'Token {{request|getToken}}' },
+            },
+            "columns": [
+                {"data": "id", "searchable": false},
+                {"data": "username"},
+                {"data": "first_name"},
+                {"data": "last_name"},
+                {"data": "email"},
+                {
+                    data: "groups",
+                    render: function ( data, type, row ) {
+                        var groups = [];
+                        $.each(data, function(key, value) {
+                            groups.push(value.name);
+                        });
+                        return  groups ;
+                    }
+                },
+                {
+                    data: "is_active",
+                    render: function ( data, type, row, meta ) {
+                        var status,StatusClass = '';
+                        if(row.is_active === true ){
+                            status = 'Active';
+                            StatusClass='btn-success';
+                        }else{
+                            status = 'In-Active';
+                            StatusClass='btn-danger';
+                        }
+                        return '<a href="api/users/'+row.id+'/" data-status="'+row.is_active+'"  class="tabledit-status-button btn btn-mini waves-effect waves-light '+StatusClass+'">'+ status +'</a>';
+                    }
+                },
+                {
+                    data: "action",
+                    render: function ( data, type, row, meta ) {
+                        return '<a href="users/'+row.id+'/"  class="tabledit-edit-button btn btn-mini btn-primary waves-effect waves-light"><span class="icofont icofont-ui-edit"></span></a>' +
+                                '<a  href="api/users/'+row.id+'/"  class="tabledit-delete-button btn btn-mini btn-danger waves-effect waves-light"><span class="icofont icofont-ui-delete"></span></a>';
+                    }
+                },
+
+            ],
+        });
+        $(document).on('click','.tabledit-delete-button',function(e){
+            e.preventDefault();
+            var url ='';
+            url = $(this).attr("href");
+            $.ajax({
+                type:'DELETE',
+                url:url,
+                headers: { 'Authorization': "Token {{request|getToken}}",'Content-Type': 'application/json'},
+                success:function(data){
+                    table.draw(false);
+                    $.toaster({ priority : 'success', title : 'Status', message : 'User Deleted!'});
+                }
+            });
+        })
+        $(document).on('click','.tabledit-status-button',function(e){
+            e.preventDefault();
+            var url ='';
+            url = $(this).attr("href");
+            status = $(this).data("status");
+            status = status == 'true' ? status = false : status = true;
+            $.ajax({
+                type:'PATCH',
+                url:url,
+                headers: { 'Authorization': "Token {{request|getToken}}",'Content-Type': 'application/json'},
+                data:JSON.stringify({ "is_active": status }),
+                success:function(data){
+                    table.draw(false);
+                    $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                }
+            });
+        })
+    });
+</script>
+
+{% endblock %}
