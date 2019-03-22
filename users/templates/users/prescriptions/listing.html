@@ -1,0 +1,83 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <div class="main-header">
+                <h4>Prescriptions</h4>
+                <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                    <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Prescriptions</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- Row end -->
+
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-header-text">Prescriptions</h5></div>
+                <div class="card-block">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table cellspacing="0" id="appointments"  class="datatable table table-small-font table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th data-priority="6">id</th>
+                                <th data-priority="6">Doctor</th>
+                                <th data-priority="6">Student</th>
+                                <th data-priority="6">Medicine Name</th>
+                                <th data-priority="6">Medicine Type</th>
+                                <th data-priority="6">How to use</th>
+                                <th data-priority="6">Action</th>
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Row end -->
+</div>
+{% endblock %}
+{% block footer %}
+<script>
+    jQuery(document).ready(function($) {
+        var table = $('#appointments').DataTable({
+            "serverSide": true,
+            "responsive": true,
+            "ajax":{
+                url:"api/prescriptions?format=datatables",
+                headers: { 'Authorization': 'Token {{request|getToken}}' },
+                },
+            "columns": [
+                {"data": "id"},
+                {"data": "doctor"},
+                {"data": "student"},
+                {"data": "medicine_name"},
+                {"data": "medicine_type"},
+                {"data": "how_to_use"},
+                {
+                    data: "action",
+                    render: function ( data, type, row, meta ) {
+                        return '<a href="prescriptions/'+row.id+'/"  class="tabledit-edit-button btn btn-mini btn-primary waves-effect waves-light"><span class="icofont icofont-ui-edit"></span></a>' +
+                                '<a  href="api/prescriptions/'+row.id+'/"  class="tabledit-delete-button btn btn-mini btn-danger waves-effect waves-light"><span class="icofont icofont-ui-delete"></span></a>';
+                    }
+                },
+            ],
+        });
+        searchOrderFn(table);
+    });
+</script>
+
+{% endblock %}

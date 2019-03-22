@@ -63,6 +63,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
     'PAGE_SIZE': 10,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 100,
+    # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+
 }
 
 MIDDLEWARE = [
@@ -141,14 +145,16 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-DATETIME_FORMAT = 'Y-m-d H:i:s'
-DATE_FORMAT = 'Y-m-d'
-TIME_FORMAT = 'H:i:s'
-#USE_I18N = True
+DATETIME_FORMAT = 'y-m H:M'
+DATE_FORMAT = 'y-m-d'
+TIME_FORMAT = 'H:M'
+USE_I18N = False
 
-#USE_L10N = False
+USE_TZ = False
 
-USE_TZ = True
+
+
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

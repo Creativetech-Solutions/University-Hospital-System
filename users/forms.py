@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Field
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Profile, Appointment
+from .models import User, Profile, Appointment,Prescription
 from default.templatetags.custom_tags import *
 
 class UserCreationform(UserCreationForm):
@@ -125,15 +125,15 @@ class Adminform(forms.ModelForm):
 
 class Appointmentform(forms.ModelForm):
 
+    doctor_id = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Doctor'), empty_label=None)
+    student_id = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Student'), empty_label=None)
     def __init__(self, *args, **kwargs):
         super(Appointmentform, self).__init__(*args, **kwargs)
-        self.fields['student'] = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Student'), empty_label=None)
-        self.fields['doctor'] = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Doctor'), empty_label=None)
         self.helper = FormHelper()
         self.helper.layout = Layout(
                 Row(
-                    Field('student', wrapper_class='col-sm-4'),
-                    Field('doctor', wrapper_class='col-sm-4'),
+                    Field('student_id', wrapper_class='col-sm-4'),
+                    Field('doctor_id', wrapper_class='col-sm-4'),
                     Field('datetime', wrapper_class='col-sm-4') 
                 ),
                 Row(
@@ -144,8 +144,32 @@ class Appointmentform(forms.ModelForm):
         self.fields['disease'].widget.attrs['rows'] = 3
         self.fields['disease'].widget.attrs['placeholder'] = 'Please enter comma separated disease names'
         self.fields['notes'].widget.attrs['rows'] = 3
+        self.fields["datetime"].widget.attrs.update({"id": "date-format"})
+
     class Meta:
         model  = Appointment
-        fields = ['student','doctor','disease','datetime','notes','status']
+        fields = ['student_id','doctor_id','disease','datetime','notes','status']
+
+
+class  Prescriptionform(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(Prescriptionform, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+                Row(
+                    Field('appointment', wrapper_class='col-sm-4'),
+                    Field('medicine_name', wrapper_class='col-sm-4'),
+                    Field('medicine_type', wrapper_class='col-sm-4')
+                ),
+                Row(
+                    Field('how_to_use', wrapper_class='col-sm-12'),
+                ),
+            )
+        #self.fields['how_to_use'].widget.attrs['rows'] = 3
+        #self.fields['how_to_use'].widget.attrs['placeholder'] = 'Please enter comma separated disease names'
+        #self.fields['how_to_use'].widget.attrs['rows'] = 3
+    class Meta:
+        model  = Prescription
+        fields = ['id','appointment','medicine_name','medicine_type','how_to_use']
 
         

@@ -23,7 +23,7 @@ class MedicineType(models.Model):
 	modified_date = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
-		return '{}'.format(self.description) 
+		return '{}'.format(self.name)
 		
 	class Meta:
 		ordering = ['name']

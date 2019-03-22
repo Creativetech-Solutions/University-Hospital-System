@@ -45,3 +45,6 @@ function checkRequiredFields(formEl){
     return true;
 
 }
+
+//$('#date-format').bootstrapMaterialDatePicker({ format : 'dddd DD MMMM YYYY - HH:mm' });
+$('#date-format').bootstrapMaterialDatePicker({ format : 'Y-M-D H:M' });

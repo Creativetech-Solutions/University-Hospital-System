@@ -45,12 +45,13 @@
 
     <!-- Responsive.css-->
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/responsive.css' %}">
+
+    <!-- Bootstrap Date-Picker css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" />
+
     <link rel="stylesheet" type="text/css" href="{% static 'custom.css' %}">
 
-
-
 </head>
-
 <body class="sidebar-mini fixed">
 <div class="wrapper">
 <div class="loader-bg">
@@ -485,8 +486,11 @@
 
 <!-- custom js -->
 <script type="text/javascript" src="{% static 'assets/js/main.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/pages/elements.js' %}"></script>
-<script src="{% static 'assets/js/menu.min.js' %}"></script>
+
+<!-- Date picker.js -->
+<script src="{% static 'assets/plugins/datepicker/js/moment-with-locales.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.js"></script>
+
 <script src="{% static 'custom.js' %}"></script>
 {% block footer %}
 

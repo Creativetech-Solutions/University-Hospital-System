@@ -60,7 +60,16 @@ appointments_detail = users_view.AppointmentsViewSet.as_view({
     'patch': 'partial_update',
     'delete': 'destroy'
 })
-
+prescriptions_list = users_view.PrescriptionViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+prescriptions_detail = users_view.PrescriptionViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
 doctor_list = users_view.DoctorsViewSet.as_view({
     'get': 'list',
     'post': 'create'
@@ -86,6 +95,8 @@ urlpatterns = format_suffix_patterns([
     path('profiles/<pk>/', profile_detail),
     path('appointments', appointments_list, name='appointments'),
     path('appointments/<pk>/', appointments_detail),
+    path('prescriptions', prescriptions_list, name='prescriptions'),
+    #path('prescriptions/<pk>/', prescriptions_detail),
 ])
 
 

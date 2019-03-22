@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from users.models import Profile, Appointment
+from users.models import Profile, Appointment,Prescription
+from hospital.models import MedicineType
 from django.contrib.auth.models import User ,Group
 from django.contrib.auth.hashers import make_password
 from default.utils import *
@@ -95,10 +96,37 @@ class StudentSerializer(serializers.ModelSerializer):   #  used to get user prof
 class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user Appointments
     student = serializers.CharField(source='student.username', read_only=True)
     doctor  = serializers.CharField(source='doctor.username', read_only=True)
+    def create(self, validated_data):
+
+        # Create the object instance...
+        request = self.context.get("request")
+        print(request.data)
+        validated_data['doctor'] = User.objects.get(id=request.data['doctor_id'])
+        validated_data['student'] = User.objects.get(id=request.data['student_id'])
+        appointment = Appointment.objects.create(**validated_data)
+        return appointment    
 
     class Meta:
         model = Appointment
         fields = ('id','student','doctor','datetime','doctor_id','student_id','disease', 'notes', 'status','created_date', 'modified_date')
+
+class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user Prescription
+    doctor = serializers.CharField(source='appointment.doctor', read_only=True) # doctor name of model fields and username from user
+    student = serializers.CharField(source='appointment.student.username', read_only=True)
+    medicine_type = serializers.CharField(source='medicine_type.name', read_only=True)
+
+    def create(self, validated_data):
+
+        # Create the object instance...
+        request = self.context.get("request")
+        print(request.data)
+
+        prescription = Prescription.objects.create(**validated_data)
+        return prescription
+
+    class Meta:
+        model = Prescription
+        fields = ('id','doctor','student','medicine_name','medicine_type','how_to_use')
 
 
 
