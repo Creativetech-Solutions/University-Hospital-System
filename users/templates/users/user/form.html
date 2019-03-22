@@ -8,13 +8,9 @@
             <div class="main-header">
                 <h4>{{ app|capfirst }}</h4>
                 <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="icofont icofont-home"></i></a>
+                    <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!"> {{ app|capfirst }} </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#">
-                        {% if user_obj  %} Edit  {% else %} Add  {% endif %}
-                    </a>
+                    <li class="breadcrumb-item"><a href="#"> {{ app|capfirst }} </a>
                     </li>
                 </ol>
             </div>

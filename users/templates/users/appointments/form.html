@@ -9,13 +9,9 @@
             <div class="main-header">
                 <h4>{{ app|capfirst }}</h4>
                 <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
-                    <li class="breadcrumb-item"><a href="index.html"><i class="icofont icofont-home"></i></a>
+                    <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!"> {{ app|capfirst }} </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#">
-                        {% if appointment  %} Edit  {% else %} Add  {% endif %}
-                    </a>
+                    <li class="breadcrumb-item"><a href="{% url 'appointments_listing' %}"> {{ app|capfirst }} </a>
                     </li>
                 </ol>
             </div>
@@ -25,7 +21,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <form method="POST" class="form" action="{% url app %}">
+                    <form method="POST" class="form" action="">
                         <fieldset class="form-group">
                             <legend class="border-bottom mb-4">{% if appointment  %} Edit  {{ app|capfirst }}  {% else %} Add {% endif %} Appointment </legend>
                            {% crispy form %}

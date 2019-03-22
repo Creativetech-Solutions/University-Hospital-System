@@ -144,7 +144,6 @@
               url:"api/users?format=datatables&ordering=-id", headers: { 'Authorization': 'Token {{request|getToken}}' },
             },
             "columns": [
-
                 {"data": "username"},
                 {"data": "email"},
                 {
@@ -163,7 +162,6 @@
                 },
             ],
         });
-
         var table = $('#hospitals').DataTable({
             "dom": '<"top">t<"bottom"><"clear">',
             "serverSide": true,

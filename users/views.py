@@ -132,7 +132,7 @@ def appointments_listing(request):
 def add_appointment(request):
     form = Appointmentform()
     context = { 'form' : form, 
-                'app':'users',
+                'app':'appointments',
                 'type':'POST',
                 'app_url':'appointments',
                 'redirect':'appointments-list'
