@@ -96,6 +96,7 @@ class StudentSerializer(serializers.ModelSerializer):   #  used to get user prof
 class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user Appointments
     student = serializers.CharField(source='student.username', read_only=True)
     doctor  = serializers.CharField(source='doctor.username', read_only=True)
+    refer_to_name  = serializers.CharField(source='refer_to.username', read_only=True)# use for listing
     def create(self, validated_data):
 
         # Create the object instance...
@@ -103,30 +104,34 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
         print(request.data)
         validated_data['doctor'] = User.objects.get(id=request.data['doctor_id'])
         validated_data['student'] = User.objects.get(id=request.data['student_id'])
+        if request.data['student_id']:
+           validated_data['refer_to'] = User.objects.get(id=request.data['doctor_id'])
+        else:
+             validated_data['refer_to'] = User.objects.get(id=request.data['refer_to']) # for saving
         appointment = Appointment.objects.create(**validated_data)
         return appointment    
 
     class Meta:
         model = Appointment
-        fields = ('id','student','doctor','datetime','doctor_id','student_id','disease', 'notes', 'status','created_date', 'modified_date')
+        fields = ('id','student','doctor','datetime','doctor_id','student_id','disease', 'notes', 'status','created_date', 'modified_date','refer_to','refer_to_name')
 
 class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user Prescription
     doctor = serializers.CharField(source='appointment.doctor', read_only=True) # doctor name of model fields and username from user
     student = serializers.CharField(source='appointment.student.username', read_only=True)
     medicine_type = serializers.CharField(source='medicine_type.name', read_only=True)
-
     def create(self, validated_data):
 
         # Create the object instance...
         request = self.context.get("request")
-        print(request.data)
-
+        #print(request.data)
+        validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
+        validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
         prescription = Prescription.objects.create(**validated_data)
         return prescription
 
     class Meta:
         model = Prescription
-        fields = ('id','doctor','student','medicine_name','medicine_type','how_to_use')
+        fields = ('id','doctor','student','medicine_name','medicine_type','how_to_use','appointment')
 
 
 

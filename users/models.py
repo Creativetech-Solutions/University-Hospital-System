@@ -57,6 +57,7 @@ class Profile(models.Model):
 class Appointment(models.Model):
 	student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='student')    
 	doctor = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='doctor', blank=True, null=True)
+	refer_to = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='refer_to', blank=True, null=True)
 	datetime = models.DateTimeField()
 	disease = models.TextField()
 	notes = models.TextField(blank=True, null=True)
@@ -64,7 +65,7 @@ class Appointment(models.Model):
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
 	def __str__(self): # converting obj
-		return f'{self.student.username} appointment with {self.doctor.username}'
+		return f'{self.student.username}- App. # {self.id}'
 
 
 class Prescription(models.Model):

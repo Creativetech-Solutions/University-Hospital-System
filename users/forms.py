@@ -150,10 +150,32 @@ class Appointmentform(forms.ModelForm):
         model  = Appointment
         fields = ['student_id','doctor_id','disease','datetime','notes','status']
 
+class Appointmentreferform(forms.ModelForm):
+
+    refer_to = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Doctor'), empty_label=None)
+    def __init__(self, *args, **kwargs):
+        super(Appointmentreferform, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+                Row(
+                    Field('refer_to', wrapper_class='col-sm-6'),
+                ),
+
+
+            )
+        self.fields['refer_to'].label = 'Refer To'
+    class Meta:
+        model  = Appointment
+        fields = ['refer_to']
+
 
 class  Prescriptionform(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+
+        appointment_id = kwargs.pop('appointment_id')
         super(Prescriptionform, self).__init__(*args, **kwargs)
+        if appointment_id is not None:
+            self.fields['appointment'] = forms.ModelChoiceField(queryset=Appointment.objects.filter(id=appointment_id), empty_label=None)
         self.helper = FormHelper()
         self.helper.layout = Layout(
                 Row(
@@ -165,9 +187,6 @@ class  Prescriptionform(forms.ModelForm):
                     Field('how_to_use', wrapper_class='col-sm-12'),
                 ),
             )
-        #self.fields['how_to_use'].widget.attrs['rows'] = 3
-        #self.fields['how_to_use'].widget.attrs['placeholder'] = 'Please enter comma separated disease names'
-        #self.fields['how_to_use'].widget.attrs['rows'] = 3
     class Meta:
         model  = Prescription
         fields = ['id','appointment','medicine_name','medicine_type','how_to_use']

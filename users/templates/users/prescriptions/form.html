@@ -3,11 +3,13 @@
 {% load static %}
 {% block content %}
 
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 p-0">
             <div class="main-header">
-                <h4>{{ app|capfirst }}</h4>
+                <h4>{{ app|capfirst }} appointments/{{appointment_id}}/prescriptions/</h4>
                 <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
                     <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
                     </li>
@@ -55,7 +57,9 @@
                data: JSON.stringify(from_data),
                success: function (data) {
                    // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
-                   window.location.href = "{% url 'prescriptions_listing' %}";
+
+
+                   window.location.href ="";
 
                 }
             });

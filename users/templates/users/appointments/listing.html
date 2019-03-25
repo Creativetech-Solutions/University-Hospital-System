@@ -33,14 +33,18 @@
                             <tr>
                                 <th data-priority="1">ID</th>
                                 <th data-priority="2">Student</th>
+                                {% if request|isDoctor %}
+                                    <th data-priority="2">Refer To</th>
+                                {% endif %}
                                 {% if not request|isDoctor %}
-                                <th data-priority="6">Doctor</th>
+                                     <th data-priority="6">Doctor</th>
+                                     <th data-priority="2">Refer To</th>
                                 {% endif %}
                                 <th data-priority="6">Date Time</th>
                                 <th data-priority="6">Disease</th>
                                 <th data-priority="6">Notes</th>
                                 {% if not request|isDoctor %}
-                                <th data-priority="6">Status</th>
+                                    <th data-priority="6">Status</th>
                                 {% endif %}
                                 <th data-priority="6">Action</th>
                             </tr>
@@ -71,6 +75,12 @@
                 {"data": "id", "searchable": false},
                 {"data": "student"},
                 {"data": "doctor"},
+                {
+                    data: "refer_to_name",
+                    render: function(data, type, row){
+                        return  row.refer_to_name ? row.refer_to_name : '';
+                    }
+                },
                 {"data": "datetime"},
                 {"data": "disease"},
                 {"data": "notes"},
@@ -109,6 +119,12 @@
             "columns": [
                 {"data": "id", "searchable": false},
                 {"data": "student"},
+                {
+                    data: "refer_to_name",
+                    render: function(data, type, row){
+                         return row.refer_to_name ? row.refer_to_name:  '';
+                    }
+                },
                 {"data": "datetime"},
                 {"data": "disease"},
                 {"data": "notes"},

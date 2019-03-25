@@ -232,13 +232,24 @@
                                                    </div>
 
                                                 </div>
-                                                <div>
-                                                   <a type="button" href="" class="btn btn-primary waves-effect waves-light">
-                                                      <i class="icofont icofont-plus"> </i>ADD Prescription
-                                                   </a>
+                                                {% crispy Appointmentreferform %}
+                                             <div class="buttons">
+                                                <div class="row">
+                                                   <div class="col-sm-6 m-b-20">
+                                                      <button  class="btn btn-primary waves-effect waves-light" id="refer_to">
+                                                         Refer
+                                                      </button>
+                                                   </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6 ">
+                                                         <a type="button" href="/appointments/{{appointment_id}}/prescriptions/add/" class="btn btn-primary waves-effect waves-light">
+                                                            <i class="icofont icofont-plus"> </i>ADD Prescription
+                                                         </a>
+                                                    </div>
+                                                </div>
                                                 </div>
                                              </div>
-                                                <!-- </div> -->
                                              </div>
                                           </div>
                                        </div>
@@ -278,6 +289,10 @@
                url: '/api/appointments/{{appointment_id}}',
                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                success: function (data) {
+                  if(data['doctor_id'] != data['refer_to']){
+                     $("#id_refer_to").val(data['refer_to']).trigger("change").attr('disabled', 'disabled');
+                     $(".buttons").addClass('hidden');
+                  }
                   setFormData(data);
                   getStudentInfo(data['student_id']);
                }
@@ -309,6 +324,28 @@
             }
     
         }
+       function saveFormData(url, btnEl, method_type){
+             var array = jQuery('form').serializeArray();
+             var from_data = {};
+             jQuery.each(array, function () {
+                from_data[this.name] = this.value || '';
+             });
+             $.ajax({
+                type: method_type,
+                url: url,
+                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
+                data: JSON.stringify(from_data),
+                success: function (data) {
+                   $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                }
+             });
+       }
+       jQuery(document).on('click','#refer_to',function(e){
+          e.preventDefault();
+          var url = "/api/appointments/{{appointment_id}}/";
+          var method_type = "PATCH";
+          saveFormData(url, $(this), method_type);
+       });
     });
 </script>
 {% endblock %}

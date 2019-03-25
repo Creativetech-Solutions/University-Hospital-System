@@ -12,7 +12,9 @@ a.tabledit-edit-button.btn.btn-primary.waves-effect.waves-light {
 .login-card {
     margin: 0 auto;
 }
-
+.hidden{
+    display: none;
+}
 /* fallback */
 @font-face {
     font-family: 'Material Icons';

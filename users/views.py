@@ -151,7 +151,7 @@ def add_appointment(request):
     return render(request, 'users/appointments/form.html',context)
 
 def appointment_detail(request, id):
-    return render(request,'users/appointments/detail.html', {'appointment_id':id} )
+    return render(request,'users/appointments/detail.html', {'appointment_id':id,"Appointmentreferform":Appointmentreferform} )
 
 #Prescription#
 
@@ -165,9 +165,6 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-
-
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -176,16 +173,17 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-def prescriptions_listing(request):
-    return render(request,'users/prescriptions/listing.html')
+def prescriptions_listing(request, id):
+    return render(request,'users/prescriptions/listing.html' )
 
-def add_prescriptions(request):
-    form = Prescriptionform()
+def add_prescriptions(request, id):
+    form = Prescriptionform(appointment_id=id)
     context = { 'form' : form,
                 'app':'Prescription',
+                'appointment_id':id,
                 'type':'POST',
                 'app_url':'prescriptions',
-                'redirect':'prescriptions-list'
+                'redirect':'appointments'
                 }
     return render(request, 'users/prescriptions/form.html',context)
 
