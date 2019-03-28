@@ -53,7 +53,7 @@ def login(request):
             redirect = '/login'
 
     # save user and token in session for website
-    request.session['user'] = user_obj
+    request.session['custom_user'] = user_obj
     request.session['token'] = token_obj
     request.session['group'] = user_group
     # create response data

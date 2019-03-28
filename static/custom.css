@@ -13,7 +13,7 @@ a.tabledit-edit-button.btn.btn-primary.waves-effect.waves-light {
     margin: 0 auto;
 }
 .hidden{
-    display: none;
+    display: none !important;
 }
 /* fallback */
 @font-face {

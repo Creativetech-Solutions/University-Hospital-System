@@ -69,7 +69,7 @@
             <ul class="top-nav lft-nav">
 
 
-                <li class="dropdown pc-rheader-submenu message-notification search-toggle">
+                <li class="dropdown pc-rheader-submenu message-notification search-toggle hidden">
                     <a href="#!" id="morphsearch-search" class="drop icon-circle txt-white">
                         <i class="ti-search"></i>
                     </a>
@@ -114,7 +114,7 @@
                         </ul>
                     </li>
                     <!-- chat dropdown -->
-                    <li class="pc-rheader-submenu ">
+                    <li class="pc-rheader-submenu hidden ">
                         <a href="#!" class="drop icon-circle displayChatbox">
                             <i class="icon-bubbles"></i>
                             <span class="badge badge-danger header-badge">5</span>
@@ -137,7 +137,7 @@
                         </a>
                         <ul class="dropdown-menu settings-menu">
                             <li><a href="#!"><i class="icon-settings"></i> Settings</a></li>
-                            <li><a href="/users/{{user.id}}"><i class="icon-user"></i> Profile</a></li>
+                            <li><a href="/users/{{ request|getUser:'id' }}"><i class="icon-user"></i> Profile</a></li>
                             <li><a href="{% url 'logout' %}?next=/login"><i class="icon-logout"></i><span> Logout</span></a></li>
 
 

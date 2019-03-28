@@ -77,13 +77,13 @@ def users_listing(request):
 
 def add_user(request):
     form = UserCreationform(request=request)
-    context = { 'form' : form, 
+    context = { 'form' : form,
                 'app':'users',
                 'type':'POST',
                 'app_url':'users',
                 'redirect':'users-list'
             }
-   
+
     return render(request, 'users/user/form.html',context)
 
 def edit_user(request, id):
@@ -97,7 +97,7 @@ def edit_user(request, id):
         profile = None
     context = {
             'form' : form,
-            'user_obj':user, 
+            'user_obj':user,
             'app':'users',
             'type':'PUT',
             'app_url':'users',
@@ -108,6 +108,8 @@ def edit_user(request, id):
          context['profile_form'] = Doctorsform(request.POST or None, instance=profile, user=user)
     elif group == 'Student':
          context['profile_form']  = Studentform(request.POST or None, instance=profile, user=user)
+    elif group == 'Pharmacist':
+         context['profile_form']  = Pharmacyform(request.POST or None, instance=profile, user=user)
 
     return render(request,'users/user/form.html',context)
 
@@ -165,6 +167,12 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
+
+        if isApiUserPharmacist(request):
+            print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+            print(isApiUserPharmacist(request))
+           #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

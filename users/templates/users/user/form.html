@@ -72,20 +72,19 @@
             jQuery.each(array, function () {
                 from_data[this.name] = this.value || '';
             });
-
-
             $.ajax({
                type: method_type,
                url: url,
                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                data: JSON.stringify(from_data),
                success: function (data) {
-                   // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
-                if(btnEl.hasClass('next'))
-                    $('.nav.nav-pills a[href="#user_profile"]').tab('show');
-                else
-                   window.location.href = "{% url 'users_listing' %}";
-
+                    $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                    if(btnEl.hasClass('next')){
+                        $('.nav.nav-pills a[href="#user_profile"]').tab('show');
+                    }
+                    else{
+                        window.location.href = "{% url 'users_listing' %}";
+                    }
                 }
             });
         }

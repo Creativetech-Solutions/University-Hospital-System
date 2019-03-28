@@ -76,4 +76,6 @@ class Prescription(models.Model):
 	edit_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='edit_by', blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
+	def __str__(self): # converting obj
+    		return f'{self.appointment.student.username} Appointment with {self.appointment.doctor.username} '
 	

@@ -48,14 +48,15 @@ class UsersSerializer(serializers.ModelSerializer):   #  used to get user profil
         user.save()
 
         # update user group
-        group = request.data['groups']
-        # check if group not exist already
-        if not user.groups.filter(id=group):
-            user.groups.add(group)
+        if 'groups' in request.data:
+            group = request.data['groups']
+            # check if group not exist already
+            if not user.groups.filter(id=group):
+                user.groups.add(group)
 
-        old_groups = user.groups.exclude(id=group)
-        if old_groups:
-            user.groups.remove(*list(old_groups))
+            old_groups = user.groups.exclude(id=group)
+            if old_groups:
+                user.groups.remove(*list(old_groups))
         return user
 
     class Meta:

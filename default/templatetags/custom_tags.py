@@ -15,7 +15,10 @@ def getToken(request):
 @register.filter
 def getUser(request, item):
 	try:
-		user = json.loads(request.session['user'][1:-1])
+		user = json.loads(request.session['custom_user'][1:-1])
+		if item == 'id':
+			return user['pk']
+
 		return user['fields'][item]
 	except:
 		return False
@@ -42,5 +45,11 @@ def isPharmacist(request):
 @register.filter
 def isHospitalAdmin(request):
 	if getUserGroup(request) == 'Hospital Admin':
+		return True
+	return False
+
+@register.filter
+def isSuperAdmin(request):
+	if getUserGroup(request) == 'Admin':
 		return True
 	return False

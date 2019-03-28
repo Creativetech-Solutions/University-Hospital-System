@@ -12,8 +12,12 @@ class UserCreationform(UserCreationForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         super(UserCreationform, self).__init__(*args, **kwargs)
-        # here check if the user is Hospital Admin, then he can only add doctor or user
-        self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.filter(name__in=['Doctor','Student']), required=True, initial=0)
+        if isSuperAdmin(self.request):
+            self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), required=True, initial=0) # for super admin all group
+        elif isHospitalAdmin(self.request):
+            self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.filter(name__in=['Doctor','Student']), required=True, initial=0)# for Hospital admin student and doctor group
+        else:
+            del self.fields['groups'] # removed for other users
 
         self.helper = FormHelper()
         self.fields['first_name'].required = True
@@ -83,6 +87,25 @@ class Doctorsform(forms.ModelForm):
         model = Profile
         fields = ('user','gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no', 'timing', 'avatar',
 				'martial_status', 'weight', 'height', 'blood_type', 'notes')
+
+
+class Pharmacyform(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(Pharmacyform, self).__init__(*args, **kwargs)
+        if user is not None:
+            self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(id=user.id), empty_label=None)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Field('user', wrapper_class='col-sm-4'),
+                Field('primary_hospital', wrapper_class='col-sm-4'),
+            ),
+        )
+    class Meta:
+        model = Profile
+        fields = ('user','primary_hospital')
 
 class Studentform(forms.ModelForm):
     def __init__(self, *args, **kwargs):
