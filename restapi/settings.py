@@ -162,7 +162,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'portal/static')
+    os.path.join(BASE_DIR, 'static')
 ]
 SESSION_COOKIE_NAME = 'hms.com'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

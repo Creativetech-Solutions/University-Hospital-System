@@ -36,7 +36,7 @@ def login(request):
     user_obj = serializers.serialize('json', [ user ], ensure_ascii=False)
     token_obj = serializers.serialize('json', [ token ], ensure_ascii=False)
     user_group = user.groups.first() 
-    redirect = None
+    redirect = '/login'
     if user_group is not None:
         user_group = user_group.name
         if user_group == 'Admin':
@@ -49,6 +49,8 @@ def login(request):
             redirect = '/users/' +str(user.id)+ '/'
         elif user_group == 'Student':
             redirect ='/users/' +str(user.id)+ '/'
+        else:
+            redirect = '/login'
 
     # save user and token in session for website
     request.session['user'] = user_obj

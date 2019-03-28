@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views # for login logout
 from .views import login, sample_api, loginPage, logout
 
@@ -27,6 +29,7 @@ urlpatterns = [
     path('', include('hospital.urls')),
     path('api/', include('api.urls')),
     path('api/login', login, name='api_login'),
+    path('', loginPage),
     path('login', loginPage),
 
     path('api/sampleapi', sample_api),
@@ -38,4 +41,4 @@ urlpatterns = [
 urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
 
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

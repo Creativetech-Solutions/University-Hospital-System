@@ -1,6 +1,8 @@
 
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from users import views
 from django.conf.urls import url
 
@@ -17,4 +19,5 @@ urlpatterns = format_suffix_patterns([
     path('prescriptions/<int:id>/', views.prescriptions_detail, name='prescriptions_detail_page'),
     path('prescriptions/<int:id>/edit/', views.edit_prescriptions, name='edit_prescriptions'),
 ])
+# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
