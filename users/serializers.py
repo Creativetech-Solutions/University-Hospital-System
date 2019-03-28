@@ -101,7 +101,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
 
         # Create the object instance...
         request = self.context.get("request")
-        print(request.data)
+        #print(request.data)
         validated_data['doctor'] = User.objects.get(id=request.data['doctor_id'])
         validated_data['student'] = User.objects.get(id=request.data['student_id'])
         if request.data['student_id']:
@@ -123,15 +123,25 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
 
         # Create the object instance...
         request = self.context.get("request")
+        #print('44444444444444444444444444444444444444')
         #print(request.data)
         validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
         validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
         prescription = Prescription.objects.create(**validated_data)
         return prescription
 
+    def update(self, instance, validated_data):
+        instance.medicine_name = validated_data.get('medicine_name', instance.medicine_name)
+        instance.medicine_type = validated_data.get('medicine_type', instance.medicine_type)
+        instance.how_to_use = validated_data.get('how_to_use', instance.how_to_use)
+        request = self.context.get("request")
+        instance.edit_by = request.user
+        instance.save()
+        return instance
+
     class Meta:
         model = Prescription
-        fields = ('id','doctor','student','medicine_name','medicine_type','how_to_use','appointment')
+        fields = ('doctor','student','medicine_name','medicine_type','how_to_use','appointment','edit_by')
 
 
 

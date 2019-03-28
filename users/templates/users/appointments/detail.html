@@ -169,42 +169,36 @@
                                                 <a class="nav-link active" data-toggle="tab" href="#appintment_info" role="tab"><i class="icofont icofont-ui-calendar"></i>Appointment Info</a>
                                                 <div class="slide"></div>
                                              </li>
-
                                           </ul>
                                        </div>
                                        <div class="container">
-                                          <div class="md-float-material">
-                                             <div class="row">
-                                                <div class="col-sm-6">
-                                                   <div class="md-group-add-on p-relative">
-                                                      <span class="md-add-on">
-                                                          <i class="icofont icofont-user"></i>
-                                                      </span>
-                                                      <div class="md-input-wrapper">
-                                                         <input type="text" readonly name="created_date" class="md-form-control md-static">
-                                                         <label>Created Date</label>
+                                             <div class="md-float-material">
+                                                <div class="row">
+                                                   <div class="col-sm-6">
+                                                      <div class="md-group-add-on p-relative">
+                                                         <span class="md-add-on">
+                                                             <i class="icofont icofont-user"></i>
+                                                         </span>
+                                                         <div class="md-input-wrapper">
+                                                            <input type="text" readonly name="created_date" class="md-form-control md-static">
+                                                            <label>Created Date</label>
 
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div class="col-sm-6">
+                                                      <div class="md-group-add-on p-relative">
+                                                         <span class="md-add-on">
+                                                             <i class="icofont icofont-envelope-open"></i>
+                                                         </span>
+                                                         <div class="md-input-wrapper">
+                                                            <input type="text" readonly name="datetime" class="md-form-control md-static">
+                                                            <label>Appointment Date</label>
+
+                                                         </div>
                                                       </div>
                                                    </div>
                                                 </div>
-
-                                                <div class="col-sm-6">
-                                                   <div class="md-group-add-on p-relative">
-                                                      <span class="md-add-on">
-                                                          <i class="icofont icofont-envelope-open"></i>
-                                                      </span>
-                                                      <div class="md-input-wrapper">
-                                                         <input type="text" readonly name="datetime" class="md-form-control md-static">
-                                                         <label>Appointment Date</label>
-
-                                                      </div>
-                                                   </div>
-                                                </div>
-
-                                                </div>
-                                                <!-- </div> -->
-
-                                                <!-- <div class="row"> -->
                                                 <div class="col-sm-6">
                                                    <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
@@ -218,7 +212,6 @@
                                                    </div>
 
                                                 </div>
-                                                <!-- <div class="row"> -->
                                                 <div class="col-sm-6">
                                                    <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
@@ -232,7 +225,61 @@
                                                    </div>
 
                                                 </div>
-                                                {% crispy Appointmentreferform %}
+                                             </div>
+                                       </div>
+                                    <div style="padding-bottom:15px">
+                                       <ul class="nav nav-tabs md-tabs " role="tablist">
+                                          <li class="nav-item">
+                                             <a class="nav-link active" data-toggle="tab" href="#appintment_info" role="tab"><i class="icofont icofont-ui-calendar"></i>Prescription Info</a>
+                                             <div class="slide"></div>
+                                          </li>
+                                       </ul>
+                                    </div>
+                                    <div class="container">
+                                       <div class="md-float-material">
+                                          <div class="row">
+                                             <div class="col-sm-6">
+                                                <div class="md-group-add-on p-relative">
+                                                      <span class="md-add-on">
+                                                          <i class="icofont icofont-user"></i>
+                                                      </span>
+                                                   <div class="md-input-wrapper">
+                                                      <input type="text" readonly name="medicine_name" class="md-form-control md-static">
+                                                      <label>Medicine Name</label>
+
+                                                   </div>
+                                                </div>
+                                             </div>
+
+                                             <div class="col-sm-6">
+                                                <div class="md-group-add-on p-relative">
+                                                      <span class="md-add-on">
+                                                          <i class="icofont icofont-envelope-open"></i>
+                                                      </span>
+                                                   <div class="md-input-wrapper">
+                                                      <input type="text" readonly name="medicine_type" class="md-form-control md-static">
+                                                      <label>Medicine Type</label>
+
+                                                   </div>
+                                                </div>
+                                             </div>
+
+                                          </div>
+                                          <div class="col-sm-12">
+                                             <div class="md-group-add-on p-relative">
+                                                      <span class="md-add-on">
+                                                                <i class="icofont icofont-address-book"></i>
+                                                            </span>
+                                                <div class="md-input-wrapper">
+                                                   <textarea class="md-form-control md-static" readonly name="how_to_use" cols="2" rows="2"></textarea>
+                                                   <label>How To Use</label>
+
+                                                </div>
+                                             </div>
+                                          </div>
+
+                                          <div>
+                                             {% crispy Appointmentreferform %}
                                              <div class="buttons">
                                                 <div class="row">
                                                    <div class="col-sm-6 m-b-20">
@@ -242,16 +289,17 @@
                                                    </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-6 ">
-                                                         <a type="button" href="/appointments/{{appointment_id}}/prescriptions/add/" class="btn btn-primary waves-effect waves-light">
-                                                            <i class="icofont icofont-plus"> </i>ADD Prescription
-                                                         </a>
-                                                    </div>
+                                                   <div class="col-sm-6 ">
+                                                      <a type="button" href="/appointments/{{appointment_id}}/prescriptions/add/" class="btn btn-primary waves-effect waves-light">
+                                                         <i class="icofont icofont-plus"> </i>ADD Prescription
+                                                      </a>
+                                                   </div>
                                                 </div>
-                                                </div>
-                                             </div>
                                              </div>
                                           </div>
+                                       </div>
+                                    </div>
+                                 </div>
                                        </div>
                                     </div>
                                  </div>
@@ -281,6 +329,18 @@
 {% block footer %}
 <script>
     jQuery(document).ready(function($) {
+       getPrescriptioninfo()
+       function getPrescriptioninfo(){
+          $.ajax({
+             type: 'GET',
+             url: '/api/prescriptions/{{appointment_id}}',
+             headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
+             success: function (data) {
+                $(".buttons").addClass('hidden');
+                setFormData(data);
+             }
+          });
+       }
         getAppointmentInfo()
         function getAppointmentInfo(){
 
@@ -336,7 +396,7 @@
                 headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                 data: JSON.stringify(from_data),
                 success: function (data) {
-                   $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                   $.toaster({ priority : 'success', title : 'Status', message : 'User refereed Successfully !'});
                 }
              });
        }

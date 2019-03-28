@@ -172,7 +172,7 @@ class Appointmentreferform(forms.ModelForm):
 class  Prescriptionform(forms.ModelForm):
     def __init__(self, *args, **kwargs):
 
-        appointment_id = kwargs.pop('appointment_id')
+        appointment_id = kwargs.pop('appointment')
         super(Prescriptionform, self).__init__(*args, **kwargs)
         if appointment_id is not None:
             self.fields['appointment'] = forms.ModelChoiceField(queryset=Appointment.objects.filter(id=appointment_id), empty_label=None)
@@ -189,6 +189,6 @@ class  Prescriptionform(forms.ModelForm):
             )
     class Meta:
         model  = Prescription
-        fields = ['id','appointment','medicine_name','medicine_type','how_to_use']
+        fields = ['appointment','medicine_name','medicine_type','how_to_use']
 
         

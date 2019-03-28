@@ -173,25 +173,36 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-def prescriptions_listing(request, id):
+def prescriptions_listing(request, id): # by Appointment
+    return render(request,'users/prescriptions/listing.html' )
+
+def prescriptions_listings(request): # all Prescriptions Listings
     return render(request,'users/prescriptions/listing.html' )
 
 def add_prescriptions(request, id):
-    form = Prescriptionform(appointment_id=id)
+    form = Prescriptionform(appointment=id)
     context = { 'form' : form,
                 'app':'Prescription',
                 'appointment_id':id,
                 'type':'POST',
                 'app_url':'prescriptions',
-                'redirect':'appointments'
                 }
     return render(request, 'users/prescriptions/form.html',context)
 
+def edit_prescriptions(request, id):
+    instance = get_object_or_404(Prescription, appointment=id)
+    form = Prescriptionform(request.POST or None, instance=instance,appointment=id)
+    context = {
+        'form' : form,
+        'app':'Prescription',
+        'obj':instance,
+        'type':'PUT',
+        'app_url':'prescriptions'
+       }
+    return render(request, 'users/prescriptions/form.html',context)
+
 def prescriptions_detail(request, id):
-
-    return render(request,'users/prescriptions/detail.html', {'appointment_id':id} )
-
-
+    return render(request,'users/prescriptions/detail.html', {'pre_id':id} )
 
 
 # User Dashboard#

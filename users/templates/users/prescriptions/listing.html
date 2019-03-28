@@ -30,17 +30,16 @@
                     <div class="table-responsive" data-pattern="priority-columns">
                         <table cellspacing="0" id="appointments"  class="datatable table table-small-font table-bordered table-striped">
                             <thead>
-                            <tr>
-                                <th data-priority="6">id</th>
-                                <th data-priority="6">Doctor</th>
-                                <th data-priority="6">Student</th>
-                                <th data-priority="6">Medicine Name</th>
-                                <th data-priority="6">Medicine Type</th>
-                                <th data-priority="6">How to use</th>
-                                <th data-priority="6">Action</th>
-                            </tr>
+                                <tr>
+                                    <th data-priority="6">Appointment#</th>
+                                    <th data-priority="6">Doctor</th>
+                                    <th data-priority="6">Student</th>
+                                    <th data-priority="6">Medicine Name</th>
+                                    <th data-priority="6">Medicine Type</th>
+                                    <th data-priority="6">How To Use</th>
+                                    <th data-priority="6">Action</th>
+                                </tr>
                             </thead>
-
                         </table>
                     </div>
                 </div>
@@ -61,19 +60,29 @@
                 headers: { 'Authorization': 'Token {{request|getToken}}' },
                 },
             "columns": [
-                {"data": "id"},
+                {"data": "appointment"},
                 {"data": "doctor"},
                 {"data": "student"},
                 {"data": "medicine_name"},
                 {"data": "medicine_type"},
                 {"data": "how_to_use"},
+                {% if request|isPharmacist %}
                 {
                     data: "action",
                     render: function ( data, type, row, meta ) {
-                        return '<a href="prescriptions/'+row.id+'/"  class="tabledit-edit-button btn btn-mini btn-primary waves-effect waves-light"><span class="icofont icofont-ui-edit"></span></a>' +
-                                '<a  href="api/prescriptions/'+row.id+'/"  class="tabledit-delete-button btn btn-mini btn-danger waves-effect waves-light"><span class="icofont icofont-ui-delete"></span></a>';
+                        return '<a href="prescriptions/'+row.appointment+'/"  class="tabledit-edit-button btn btn-mini btn-primary waves-effect waves-light"><span class="icofont icofont-open-eye"></span></a>';
                     }
                 },
+                {% else %}
+                {
+                    data: "action",
+                            render: function ( data, type, row, meta ) {
+                    return '<a href="prescriptions/'+row.appointment+'/"  class="tabledit-edit-button btn btn-mini btn-primary waves-effect waves-light"><span class="icofont icofont-ui-edit"></span></a>' +
+                            '<a  href="api/prescriptions/'+row.appointment+'/"  class="tabledit-delete-button btn btn-mini btn-danger waves-effect waves-light"><span class="icofont icofont-ui-delete"></span></a>';
+                }
+                },
+                {% endif %}
+
             ],
         });
         searchOrderFn(table);

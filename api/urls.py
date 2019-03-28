@@ -96,7 +96,7 @@ urlpatterns = format_suffix_patterns([
     path('appointments', appointments_list, name='appointments'),
     path('appointments/<pk>/', appointments_detail),
     path('prescriptions', prescriptions_list, name='prescriptions'),
-    #path('prescriptions/<pk>/', prescriptions_detail),
+    path('prescriptions/<pk>/', prescriptions_detail),
 ])
 
 

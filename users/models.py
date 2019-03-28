@@ -69,10 +69,11 @@ class Appointment(models.Model):
 
 
 class Prescription(models.Model):
-	appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)  
+	appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, primary_key=True)
 	how_to_use = models.TextField(blank=True, null=True)
 	medicine_name = models.CharField(max_length=250, blank=True, null=True)
 	medicine_type = models.ForeignKey("hospital.MedicineType", on_delete=models.SET_NULL, blank=True, null=True)
+	edit_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='edit_by', blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
 	

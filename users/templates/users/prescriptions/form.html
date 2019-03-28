@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-12 p-0">
             <div class="main-header">
-                <h4>{{ app|capfirst }} appointments/{{appointment_id}}/prescriptions/</h4>
+                <h4>{{ app|capfirst }} {{obj.appointment_id}}</h4>
                 <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
                     <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
                     </li>
@@ -42,8 +42,7 @@
 {% block footer %}
 <script>
     jQuery(document).ready(function($) {
-       
-        function saveFormData(url, btnEl, method_type){
+        function saveFormData(url, btnEl, method_type,redirect_url){
            // if( Validate() === true ) {
             var array = btnEl.parents('form').serializeArray();
             var from_data = {};
@@ -57,9 +56,7 @@
                data: JSON.stringify(from_data),
                success: function (data) {
                    // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
-
-
-                   window.location.href ="";
+                   window.location.href =redirect_url;
 
                 }
             });
@@ -67,13 +64,16 @@
 
         jQuery(document).on('click','.save-basic',function(e){
             e.preventDefault();
-            {% if prescription.id %}
-                var url = "{% url app_url %}"+'/'+"{{prescription.id}}"+'/';
+            {% if obj.appointment_id %}
+                var url = "{% url app_url %}"+'/'+"{{obj.appointment_id}}"+'/';
+                var redirect_url =  "{% url 'prescriptions_detail_page' obj.appointment_id %}";
+
             {% else %}
                 var url = "{% url app_url %}";
+                var redirect_url =  "{% url 'appointment_detail_page' appointment_id %}";
             {% endif %}
             var method_type = "{{type}}";
-            saveFormData(url, $(this), method_type);
+            saveFormData(url, $(this), method_type,redirect_url);
         })
 
     });
