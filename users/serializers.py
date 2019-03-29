@@ -102,7 +102,6 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
 
         # Create the object instance...
         request = self.context.get("request")
-        #print(request.data)
         validated_data['doctor'] = User.objects.get(id=request.data['doctor_id'])
         validated_data['student'] = User.objects.get(id=request.data['student_id'])
         if request.data['student_id']:
@@ -124,8 +123,6 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
 
         # Create the object instance...
         request = self.context.get("request")
-        #print('44444444444444444444444444444444444444')
-        #print(request.data)
         validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
         validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
         prescription = Prescription.objects.create(**validated_data)

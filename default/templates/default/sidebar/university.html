@@ -1,33 +1,18 @@
-<aside class="main-sidebar hidden-print ">
-    <section class="sidebar" id="sidebar-scroll">
-        <!-- Sidebar Menu-->
-        <ul class="sidebar-menu">
-            <li class="treeview active">
-                <a class="waves-effect waves-dark" href="{%  url 'users_dashboard' %}">
-                    <i class="ti-dashboard text-purple"></i><span> Dashboard</span>
-                </a>
-
-            </li>
-            <li class="treeview">
-                <a class="waves-effect waves-dark" href="#">
-                    <i class="ti-user text-custom"></i><span> Users</span><i class="icon-arrow-down"></i>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a class="waves-effect waves-dark" href="{% url 'users_listing' %}" target="k"><i class="icon-arrow-right"></i><span> Users</span></a></li>
-                    <li><a class="waves-effect waves-dark" href="{% url 'add_user' %}" target=""><i class="icon-arrow-right"></i><span> Add User</span></a></li>
-                </ul>
-            </li>
-
-
-            <li><a class="waves-effect waves-dark" href="{% url 'appointments_listing' %}" target=""><i class="icon-arrow-right"></i><span> Appointments</span></a></li>
-            <li><a class="waves-effect waves-dark" href="{% url 'appointments_listing' %}" target=""><i class="icon-arrow-right"></i><span> Prescriptions </span></a></li>
-
-
-            <li><a href="#"><i class="ti-settings text-custom"></i><span> Setting</span></a> </li>
-            <li><a href="{% url 'logout' %}?next=/login"><i class="icon-logout text-custom"></i><span> Logout</span></a> </li>
-
-
-        </ul>
-    </section>
-</aside>
+<li class="treeview active">
+    <a class="waves-effect waves-dark" href="{%  url 'users_dashboard' %}">
+        <i class="ti-dashboard text-purple"></i><span> Dashboard</span>
+    </a>
+</li>
+<li class="treeview">
+    <a class="waves-effect waves-dark" href="#">
+        <i class="ti-user text-custom"></i><span> Users</span><i class="icon-arrow-down"></i>
+    </a>
+    <ul class="treeview-menu">
+        <li><a class="waves-effect waves-dark" href="{% url 'users_listing' %}" target="k"><i class="icon-arrow-right"></i><span> Users</span></a></li>
+        <li><a class="waves-effect waves-dark" href="{% url 'add_user' %}" target=""><i class="icon-arrow-right"></i><span> Add User</span></a></li>
+    </ul>
+</li>
+<li><a class="waves-effect waves-dark" href="{% url 'appointments_listing' %}" target=""><i class="icon-arrow-right"></i><span> Appointments</span></a></li>
+<li><a class="waves-effect waves-dark" href="{% url 'appointments_listing' %}" target=""><i class="icon-arrow-right"></i><span> Prescriptions </span></a></li>
+<li><a href="#"><i class="ti-settings text-custom"></i><span> Setting</span></a> </li>
 

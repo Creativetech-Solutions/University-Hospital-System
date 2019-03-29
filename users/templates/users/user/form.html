@@ -60,7 +60,6 @@
 
             return true;
         }
-        
         function saveFormData(url, btnEl, method_type){
            // if( Validate() === true ) {
 
@@ -80,7 +79,7 @@
                success: function (data) {
                     $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
                     if(btnEl.hasClass('next')){
-                        $('.nav.nav-pills a[href="#user_profile"]').tab('show');
+                        $('a[href="#user_profile"]').tab('show');
                     }
                     else{
                         window.location.href = "{% url 'users_listing' %}";
@@ -88,8 +87,6 @@
                 }
             });
         }
-
-
         jQuery(document).on('click','.save-basic',function(e){
             e.preventDefault();
             {% if user_obj %}
@@ -100,7 +97,6 @@
             var method_type = "{{type}}";
             saveFormData(url, $(this), method_type);
         })
-
         jQuery(document).on('click','.save-profile',function(e){
             e.preventDefault();
             {% if profile is not None %}

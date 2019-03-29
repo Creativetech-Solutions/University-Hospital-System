@@ -13,7 +13,6 @@ class AuthenticateMiddleware:
 	def __call__(self, request):
 		# Code to be executed for each request before
 		# the view (and later middleware) are called.
-
 		return self.loginCheck(request)
 
 	def loginCheck(self, request):

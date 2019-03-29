@@ -105,7 +105,6 @@
                 var url ='';
                 url = $(this).attr("href");
                 status = $(this).data("status");
-                console.log(status);
                 status = status == 'true' ? status = false : status = true;
                 $.ajax({
                     type:'PATCH',
@@ -113,8 +112,9 @@
                     headers: { 'Authorization': "Token {{request|getToken}}",'Content-Type': 'application/json'},
                     data:JSON.stringify({ "status": status }),
                     success:function(data){
-                            table.draw(false);
-                            $.toaster({ priority : 'success', title : 'Status', message : 'Hospital Status Updated!'});
+                        table.draw(false);
+                        $.toaster({ priority : 'success', title : 'Status', message : 'Hospital Status Updated!'});
+
                     }
                 });
             });

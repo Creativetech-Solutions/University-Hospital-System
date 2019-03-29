@@ -40,7 +40,7 @@
     <link href="{% static 'assets/css/svg-weather.css' %}" rel="stylesheet">
 
 
-    <!-- Style.css -->
+    <!-- Style.css-->
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/main.css' %}">
 
     <!-- Responsive.css-->
@@ -199,15 +199,29 @@
         </nav>
     </header>
     <!-- Side-Nav-->
-    {% if request|isDoctor %}
-        {% include "default/sidebar/doctor.html" %}
-    {% elif request|isPharmacist %}
-        {% include "default/sidebar/pharmacy.html" %}
-    {% elif request|isHospitalAdmin %}
-        {% include "default/sidebar/university.html" %}
-    {% else %}
-        {% include "default/sidebar/admin.html" %}
-    {% endif %}
+    <aside class="main-sidebar hidden-print ">
+        <section class="sidebar" id="sidebar-scroll">
+            <!-- Sidebar Menu-->
+            <ul class="sidebar-menu">
+                {% if request|isDoctor %}
+                    {% include "default/sidebar/doctor.html" %}
+                {% elif request|isPharmacist %}
+                    {% include "default/sidebar/pharmacy.html" %}
+                {% elif request|isHospitalAdmin %}
+                    {% include "default/sidebar/university.html" %}
+                {% elif request|isStudent %}
+                    {% include "default/sidebar/student.html" %}
+                {% elif request|isSuperAdmin %}
+                    {% include "default/sidebar/admin.html" %}
+                {% else %}
+                    {% include "default/sidebar/student.html" %}
+                {% endif %}
+                <li><a href="/users/{{ request|getUser:'id' }}"><i class="icon-user text-custom"></i><span> Profile</span></a> </li>
+                <li><a href="{% url 'logout' %}?next=/login"><i class="icon-logout text-custom"></i><span> Logout</span></a> </li>
+            </ul>
+        </section>
+    </aside>
+
     <!-- Sidebar chat start -->
     <div id="sidebar" class="p-fixed header-users showChat">
         <div class="had-container">

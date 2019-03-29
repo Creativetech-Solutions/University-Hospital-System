@@ -272,15 +272,16 @@
                                                             </span>
                                                 <div class="md-input-wrapper">
                                                    <textarea class="md-form-control md-static" readonly name="how_to_use" cols="2" rows="2"></textarea>
-                                                   <label>How To Use</label>
+                                                   <label>How To Use   </label>
 
                                                 </div>
                                              </div>
                                           </div>
 
-                                          <div>
-                                             {% crispy Appointmentreferform %}
-                                             <div class="buttons">
+                                          <div class="formss">
+                                             {% if request|getUserGroup != 'Student' or request|getUserGroup == 'Pharmacist'  %}
+                                                {% crispy Appointmentreferform %}
+
                                                 <div class="row">
                                                    <div class="col-sm-6 m-b-20">
                                                       <button  class="btn btn-primary waves-effect waves-light" id="refer_to">
@@ -288,6 +289,8 @@
                                                       </button>
                                                    </div>
                                                 </div>
+                                             {% endif %}
+                                             {% if request|getUserGroup == 'Doctor' or request|getUserGroup == 'Pharmacist' %}
                                                 <div class="row">
                                                    <div class="col-sm-6 ">
                                                       <a type="button" href="/appointments/{{appointment_id}}/prescriptions/add/" class="btn btn-primary waves-effect waves-light">
@@ -295,7 +298,7 @@
                                                       </a>
                                                    </div>
                                                 </div>
-                                             </div>
+                                                {% endif %}
                                           </div>
                                        </div>
                                     </div>
@@ -336,7 +339,7 @@
              url: '/api/prescriptions/{{appointment_id}}',
              headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
              success: function (data) {
-                $(".buttons").addClass('hidden');
+                $(".formss").addClass('hidden');
                 setFormData(data);
              }
           });
@@ -350,8 +353,8 @@
                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                success: function (data) {
                   if(data['doctor_id'] != data['refer_to']){
-                     $("#id_refer_to").val(data['refer_to']).trigger("change").attr('disabled', 'disabled');
-                     $(".buttons").addClass('hidden');
+                     //$("#id_refer_to").val(data['refer_to']).trigger("change").attr('disabled', 'disabled');
+                     //$(".buttons").addClass('hidden');
                   }
                   setFormData(data);
                   getStudentInfo(data['student_id']);

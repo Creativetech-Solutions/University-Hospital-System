@@ -56,6 +56,9 @@
             jQuery.each(array, function() {
                 from_data[this.name] = this.value || '';
             });
+            if(from_data['status'] === undefined){
+                from_data['status'] = 0;
+            }
             $.ajax({
                 type:'{{type}}',
                 url:url,

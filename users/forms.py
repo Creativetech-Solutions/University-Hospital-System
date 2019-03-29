@@ -147,7 +147,6 @@ class Adminform(forms.ModelForm):
         fields =('gender', 'mobile_no', 'avatar')
 
 class Appointmentform(forms.ModelForm):
-
     doctor_id = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Doctor'), empty_label=None)
     student_id = forms.ModelChoiceField(queryset=User.objects.filter(groups__name='Student'), empty_label=None)
     def __init__(self, *args, **kwargs):
@@ -168,6 +167,8 @@ class Appointmentform(forms.ModelForm):
         self.fields['disease'].widget.attrs['placeholder'] = 'Please enter comma separated disease names'
         self.fields['notes'].widget.attrs['rows'] = 3
         self.fields["datetime"].widget.attrs.update({"id": "date-format"})
+        self.fields['student_id'].label = 'Student'
+        self.fields['doctor_id'].label = 'Doctor'
 
     class Meta:
         model  = Appointment
@@ -197,8 +198,10 @@ class  Prescriptionform(forms.ModelForm):
 
         appointment_id = kwargs.pop('appointment')
         super(Prescriptionform, self).__init__(*args, **kwargs)
+        self.fields['appointment'] = forms.ModelChoiceField(queryset=Appointment.objects.exclude(id__in=Prescription.objects.all().values_list('appointment_id', flat=True)))
         if appointment_id is not None:
             self.fields['appointment'] = forms.ModelChoiceField(queryset=Appointment.objects.filter(id=appointment_id), empty_label=None)
+
         self.helper = FormHelper()
         self.helper.layout = Layout(
                 Row(
@@ -213,5 +216,7 @@ class  Prescriptionform(forms.ModelForm):
     class Meta:
         model  = Prescription
         fields = ['appointment','medicine_name','medicine_type','how_to_use']
+
+
 
         

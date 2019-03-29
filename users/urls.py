@@ -14,10 +14,13 @@ urlpatterns = format_suffix_patterns([
     path('appointment/add', views.add_appointment, name='add_appointment'),
     path('appointments-list', views.appointments_listing, name='appointments_listing'),
     path('appointments/<int:id>/', views.appointment_detail, name='appointment_detail_page'),
-    path('appointments/<int:id>/prescriptions/add/',views.add_prescriptions, name='add_prescriptions'),
+    path('appointments/edit/<int:id>/', views.edit_appointment, name='edit_appointment'),
+    path('appointments/<int:appointment_id>/prescriptions/add/',views.add_prescriptions, name='add_prescriptions'),
     path('prescriptions-list', views.prescriptions_listings, name='prescriptions_listing'),
+    path('prescriptions/add', views.add_prescriptions, name='add_prescriptionsfordoctor'),
+
     path('prescriptions/<int:id>/', views.prescriptions_detail, name='prescriptions_detail_page'),
     path('prescriptions/<int:id>/edit/', views.edit_prescriptions, name='edit_prescriptions'),
 ])
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 

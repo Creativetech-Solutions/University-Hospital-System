@@ -3,15 +3,10 @@ from django.contrib.auth.models import User
 from default.templatetags.custom_tags import *
 
 def checkUserGroup(request, group):
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-    print(request.user.groups)
-
     if 'user_group' not in request.session:
-        print('innnnnnnnnnnnnnnnnnnnnnnnnnnnnnn')
         request.session['user_group'] = request.user.groups.values_list('name', flat=True).first()
 
     if request.session['user_group'] == group:
-        print('session true')
         return True
     else:
         return False
@@ -33,6 +28,11 @@ def isApiUserAdmin(request):
 
 def isApiUserDoctor(request):
     if apiUserGroup(request) == 'Doctor':
+        return True
+    return False
+
+def isApiUserStudent(request):
+    if apiUserGroup(request) == 'Student':
         return True
     return False
 

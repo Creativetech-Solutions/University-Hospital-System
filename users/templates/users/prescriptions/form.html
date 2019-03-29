@@ -56,6 +56,8 @@
                data: JSON.stringify(from_data),
                success: function (data) {
                    // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                   if(redirect_url == null)
+                           redirect_url ="/appointments/"+data.appointment+'/';
                    window.location.href =redirect_url;
 
                 }
@@ -64,13 +66,18 @@
 
         jQuery(document).on('click','.save-basic',function(e){
             e.preventDefault();
-            {% if obj.appointment_id %}
+            {% if obj.appointment_id %} // for edit prescription case
                 var url = "{% url app_url %}"+'/'+"{{obj.appointment_id}}"+'/';
                 var redirect_url =  "{% url 'prescriptions_detail_page' obj.appointment_id %}";
+            {% else %} // for Add prescription case
+                {% if appointment_id is not None %} // added from the appointment detail page
+                    var url = "{% url app_url %}";
+                    var redirect_url = "{% url 'appointment_detail_page' appointment_id %}";
+            {% else %} // direct add from main page
+                    var url = "{% url app_url %}";
+                    var redirect_url = null
+            {% endif %}
 
-            {% else %}
-                var url = "{% url app_url %}";
-                var redirect_url =  "{% url 'appointment_detail_page' appointment_id %}";
             {% endif %}
             var method_type = "{{type}}";
             saveFormData(url, $(this), method_type,redirect_url);
