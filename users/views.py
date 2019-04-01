@@ -10,13 +10,9 @@ from users.models import Profile, Appointment
 from hospital.models import Hospital
 from users.serializers import UsersSerializer,DoctorsSerializer,StudentSerializer,AppointmentsSerializer,ProfileSerializer,PrescriptionSerializer
 from django.http import Http404, HttpResponse
-from rest_framework import mixins
-from rest_framework import generics
 from users.permissions import IsOwnerOrReadOnly
 from rest_framework.reverse import reverse
-from rest_framework import viewsets
-from rest_framework import permissions
-from rest_framework import filters
+from rest_framework import viewsets,permissions,filters, mixins, generics
 from datetime import date
 from .forms import *
 from default.templatetags.custom_tags import *
@@ -48,7 +44,8 @@ class UserViewSet(viewsets.ModelViewSet):
 			serializer = self.get_serializer(page, many=True)
 			return self.get_paginated_response(serializer.data)
 		serializer = self.get_serializer(queryset, many=True)
-		return Response(serializer.data)
+		return apiCustomizedResponse(serializer.data)
+
 	def perform_create(self, serializer):
 		return serializer.save()
 
@@ -63,6 +60,13 @@ class UserViewSet(viewsets.ModelViewSet):
 		user.groups.add(post_data)
 		headers = self.get_success_headers(serializer.data)
 		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		data = serializer.data
+		# here you can manipulate your data response
+		return apiCustomizedResponse(data)
 
 class ProfileViewSet(viewsets.ModelViewSet):
 	queryset = Profile.objects.all()

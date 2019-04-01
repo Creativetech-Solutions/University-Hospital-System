@@ -17,8 +17,8 @@ class AuthenticateMiddleware:
 
 	def loginCheck(self, request):
 		if '/api/' not in request.path:
-			if request.session.has_key('token') and (request.path in  ['/login','/api/login','/']):
+			if request.session.has_key('token') and (request.path in  ['/login','/']):
 				return redirect('/users-dashboard')
-			elif not request.session.has_key('token') and request.path != '/login' and request.path != '/api/login':
+			elif not request.session.has_key('token') and request.path != '/login':
 				  return redirect('/login')
 		return self.get_response(request)
