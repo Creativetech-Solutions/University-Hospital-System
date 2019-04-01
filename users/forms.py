@@ -22,6 +22,7 @@ class UserCreationform(UserCreationForm):
         self.helper = FormHelper()
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
+        self.fields['username'].help_text  = 'Required. 150 characters or fewer'
         self.helper.layout = Layout(
             Row(
                 Field('first_name', wrapper_class='col-sm-6'),

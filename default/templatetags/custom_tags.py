@@ -59,3 +59,9 @@ def isSuperAdmin(request):
 	if getUserGroup(request) == 'Admin':
 		return True
 	return False
+
+@register.filter
+def isActiveRoute(request, path):
+	if request.path in path.split(','):
+		return True
+	return False

@@ -54,7 +54,8 @@
             var password = document.getElementById("id_password1").value;
             var confirmPassword = document.getElementById("id_password2").value;
             if (password != confirmPassword) {
-                $("#error").text("Passwords do not match.");// we will update validation for rest frame work latter
+                $("#error").text("Passwords do not match.");
+                // we will update validation for rest frame work latter
                 return false;
             }
 
@@ -77,7 +78,7 @@
                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                data: JSON.stringify(from_data),
                success: function (data) {
-                    $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                   $.toaster({priority: 'success', title: 'Status', message: 'User Info Updated!'});
                     if(btnEl.hasClass('next')){
                         $('a[href="#user_profile"]').tab('show');
                     }

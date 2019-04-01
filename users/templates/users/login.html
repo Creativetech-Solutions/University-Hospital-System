@@ -19,11 +19,6 @@
     <!-- themify -->
     <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/themify-icons/themify-icons.css' %}">
 
-    <!-- iconfont -->
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/icofont/css/icofont.css' %}">
-
-    <!-- simple line icon -->
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/icon/simple-line-icons/css/simple-line-icons.css' %}">
 
     <!-- Required Fremwork -->
     <link rel="stylesheet" type="text/css" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
@@ -99,10 +94,6 @@
 <!-- Required Fremwork -->
 <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'assets/js/jquery.toaster.js' %}"></script>
-<script src="{% static 'assets/plugins/datepicker/js/moment-with-locales.min.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.js"></script>
-<!-- custom js -->
-<script src="{% static 'custom.js' %}"></script>
 <script>
     $(document).on('click','.login-btn', function(e){
         e.preventDefault();
@@ -121,12 +112,22 @@
                 if(data['type'] == 'success'){
                     window.location.assign(data['redirect']);
                 } else {
-                    $.toaster({ priority : 'danger', title : 'Status', message : data['message']});
+                    $.toaster({
+                        priority: 'danger',
+                        title: 'Status',
+                        message: data['message'],
+                        timeout: 5000
+                    });
                 }
             },
             error:function(data){
                 response = data['responseJSON'];
-                $.toaster({ priority : 'danger', title : 'Status', message : response['message']});
+                $.toaster({
+                    priority: 'danger',
+                    title: 'Status',
+                    message: response['message'],
+                    timeout: 5000
+                });
 
             }
         })

@@ -1,6 +1,7 @@
 import requests, json
 from django.contrib.auth.models import User
 from default.templatetags.custom_tags import *
+from rest_framework.response import Response
 
 def checkUserGroup(request, group):
     if 'user_group' not in request.session:
@@ -45,3 +46,14 @@ def isApiUserHospitalAdmin(request):
     print(apiUserGroup(request))
     if apiUserGroup(request) == 'Hospital Admin':
         return True
+
+
+def apiCustomizedResponse(data, type, message, status=None, template_name=None, headers=None, content_type=None):
+    data = {
+        'data':data,
+        'type':type,
+        'message':message,
+    }
+    print(data)
+    print('test')
+    return Response(data, status=status, template_name=template_name, headers=headers, content_type=content_type)

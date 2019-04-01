@@ -4,7 +4,7 @@ from hospital.models import MedicineType
 from django.contrib.auth.models import User ,Group
 from django.contrib.auth.hashers import make_password
 from default.utils import *
-
+from rest_framework.validators import UniqueValidator
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +14,9 @@ class GroupSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):   #  used to get user profile
     groups = GroupSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=True)
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+    username = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())], max_length=150)
     # add role base profile fields here
     def __init__(self, *args, **kwargs):
         super(UsersSerializer, self).__init__(*args, **kwargs)
@@ -38,13 +41,24 @@ class UsersSerializer(serializers.ModelSerializer):   #  used to get user profil
                 self.fields['diseases'] = serializers.CharField(source='profile.diseases', read_only=True)
                 self.fields['notes'] = serializers.CharField(source='profile.notes', read_only=True)
 
+    def validate_password1(self, password):
+        request = self.context.get("request")
+        password2 = request.data['password2']
+        if password != password2:
+            raise serializers.ValidationError("Password and confirm password do not match")
+        elif password is None or password == '':
+            raise serializers.ValidationError("Password can not be null")
+        else:    
+            return password
+
     def update(self, instance, validated_data):
         request = self.context.get("request")
-        # update password
-        password = request.data['password1']
         user = super(UsersSerializer, self).update(instance, validated_data)
-        if password: 
-            user.set_password(password)
+        if 'password1' in request.data:
+            # update password
+            password = request.data['password1']
+            if password: 
+                user.set_password(password)
         user.save()
 
         # update user group
@@ -57,11 +71,12 @@ class UsersSerializer(serializers.ModelSerializer):   #  used to get user profil
             old_groups = user.groups.exclude(id=group)
             if old_groups:
                 user.groups.remove(*list(old_groups))
+
         return user
 
     class Meta:
         model = User
-        fields = ('id','username','first_name', 'last_name','email','is_active','groups')
+        fields = ('id','username','first_name', 'last_name','email','is_active','groups','password1','password2')
         datatables_always_serialize = ('id',)
 
 

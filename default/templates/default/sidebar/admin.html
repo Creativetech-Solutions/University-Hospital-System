@@ -1,11 +1,10 @@
-
-<li class="treeview active">
+<li class="treeview {% if request|isActiveRoute:'/users-dashboard' %} active {% endif %}">
     <a class="waves-effect waves-dark" href="{%  url 'users_dashboard' %}">
         <i class="ti-dashboard text-purple"></i><span> Dashboard</span>
     </a>
 
 </li>
-<li class="treeview">
+<li class="treeview {% if request|isActiveRoute:'/users-list,/users/add' %} active {% endif %}">
     <a class="waves-effect waves-dark" href="#">
         <i class="ti-user text-custom"></i><span> Users</span><i class="icon-arrow-down"></i>
     </a>
@@ -15,7 +14,7 @@
     </ul>
 </li>
 
-<li class="treeview">
+<li class="treeview {% if request|isActiveRoute:'/hospitals-listing,/hospitals/add' %} active {% endif %}">
     <a class="waves-effect waves-dark" href="#">
         <i class="ti-layout-list-post text-custom"></i><span> Hospital</span><i class="icon-arrow-down"></i>
     </a>
@@ -25,7 +24,7 @@
     </ul>
 </li>
 
-<li class="treeview">
+<li class="treeview {% if request|isActiveRoute:'/appointments-list,/appointment/add' %} active {% endif %}">
     <a class="waves-effect waves-dark" href="index.html">
         <i class="ti-receipt text-custom"></i><span> Appointments</span><i class="icon-arrow-down"></i>
     </a>

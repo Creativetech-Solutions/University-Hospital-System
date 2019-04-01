@@ -37,33 +37,44 @@ def login(request):
     token_obj = serializers.serialize('json', [ token ], ensure_ascii=False)
     user_group = user.groups.first() 
     redirect = '/login'
-    if user_group is not None:
-        user_group = user_group.name
-        if user_group == 'Admin':
+    if user_group is not None or user.is_superuser:
+        if user.is_superuser:
             redirect = '/users-dashboard'
-        elif user_group == 'Doctor':
-            redirect = '/users/' +str(user.id)+ '/'
-        elif user_group == 'Hospital Admin':
-            redirect ='/users/' +str(user.id)+ '/'
-        elif user_group == 'Pharmacist':
-            redirect = '/users/' +str(user.id)+ '/'
-        elif user_group == 'Student':
-            redirect ='/users/' +str(user.id)+ '/'
+            user_group = 'Admin'
         else:
-            redirect = '/login'
+            user_group = user_group.name
+            if user_group == 'Admin':
+                redirect = '/users-dashboard'
+            elif user_group == 'Doctor':
+                redirect = '/users/' +str(user.id)+ '/'
+            elif user_group == 'Hospital Admin':
+                redirect ='/users/' +str(user.id)+ '/'
+            elif user_group == 'Pharmacist':
+                redirect = '/users/' +str(user.id)+ '/'
+            elif user_group == 'Student':
+                redirect ='/users/' +str(user.id)+ '/'
+            else:
+                redirect = '/login'
 
-    # save user and token in session for website
-    request.session['custom_user'] = user_obj
-    request.session['token'] = token_obj
-    request.session['group'] = user_group
-    # create response data
-    data = { 'user_name':user.username, 'first_name':user.first_name,'last_name':user.last_name,'email':user.email, 'type':user_group}
-    return Response({
-        'token': token.key, 
-        'data':data, 
-        'type':'success',
-        'redirect':redirect,
-        }, status=HTTP_200_OK)
+        # save user and token in session for website
+        request.session['custom_user'] = user_obj
+        request.session['token'] = token_obj
+        request.session['group'] = user_group
+        # create response data
+        data = { 'user_name':user.username, 'first_name':user.first_name,'last_name':user.last_name,'email':user.email, 'type':user_group}
+        return Response({
+            'token': token.key, 
+            'data':data, 
+            'type':'success',
+            'redirect':redirect,
+            }, status=HTTP_200_OK)
+    else:
+        return Response({
+            'data':[], 
+            'type':'error',
+            'message':'Permission denied. Contact Adminstrator',
+            'redirect':redirect,
+            }, status=HTTP_400_BAD_REQUEST)
 
 def loginPage(request):
     return render(request,'users/login.html',{'next': 'users_dashboard',})
