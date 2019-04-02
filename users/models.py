@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
 
-
-
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 	title = models.CharField(max_length=100, blank=True, null=True)
@@ -22,7 +20,10 @@ class Profile(models.Model):
 	secondary_hospital = models.ForeignKey("hospital.Hospital", on_delete=models.SET_NULL, related_name='secondary_hospital',blank=True, null=True)                                    
 	specialty = models.CharField(max_length=250, blank=True, null=True)
 	mobile_no = models.CharField(max_length=25, blank=True, null=True)
-	timing = models.TextField(blank=True, null=True)
+	session_1_start = models.TimeField(null=True, blank=True)
+	session_1_end = models.TimeField(null=True, blank=True)
+	session_2_start = models.TimeField(null=True, blank=True)
+	session_2_end = models.TimeField(null=True, blank=True)
 	avatar = models.CharField(max_length=250, blank=True, null=True)
 	MARTIAL_STATUS = (
 		('married', 'Married'),
@@ -51,7 +52,7 @@ class Profile(models.Model):
 		ordering = ('created_date',)
 
 	def __str__(self): # converting obj
-				return f'{self.user.username} Profile'
+		return f'{self.user.username} Profile'
 
 
 class Appointment(models.Model):
@@ -61,7 +62,13 @@ class Appointment(models.Model):
 	datetime = models.DateTimeField()
 	disease = models.TextField()
 	notes = models.TextField(blank=True, null=True)
-	status = models.BooleanField(default=True)
+	STATUS_CHOICES = (
+		('N', 'New'),
+		('P', 'Processed'),
+		('C', 'Cancel'),
+	)
+	status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='N')
+	# status = models.BooleanField(default=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
 	def __str__(self): # converting obj

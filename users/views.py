@@ -18,6 +18,7 @@ from .forms import *
 from default.templatetags.custom_tags import *
 from default.utils import *
 from rest_framework.pagination import PageNumberPagination
+from django.views.generic import TemplateView
 
 class StandardResultsSetPagination(PageNumberPagination):
 	page_size = 100
@@ -25,7 +26,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 	max_page_size = 1000
 
 # ---------User views --------------#
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet, generics.RetrieveAPIView):
 
 	queryset = User.objects.all()
 	serializer_class = UsersSerializer
@@ -44,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
 			serializer = self.get_serializer(page, many=True)
 			return self.get_paginated_response(serializer.data)
 		serializer = self.get_serializer(queryset, many=True)
-		return apiCustomizedResponse(serializer.data)
+		# return apiCustomizedResponse(serializer.data)
 
 	def perform_create(self, serializer):
 		return serializer.save()
@@ -66,7 +67,7 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer = self.get_serializer(instance)
 		data = serializer.data
 		# here you can manipulate your data response
-		return apiCustomizedResponse(data)
+		# return apiCustomizedResponse(data)
 
 class ProfileViewSet(viewsets.ModelViewSet):
 	queryset = Profile.objects.all()
@@ -145,6 +146,18 @@ class AppointmentsViewSet(viewsets.ModelViewSet):
 def appointments_listing(request):
 	return render(request,'users/appointments/listing.html')
 
+class AppointmentCalendar(TemplateView):
+	template_name = "users/appointments/calendar.html"
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		if isSuperAdmin(self.request):
+			appointments = Appointment.objects.all();
+			context['appointments'] = appointments
+		elif isDoctor(self.request):
+			context['appointments'] = Appointment.objects.filter(doctor=getUser(self.request,'id'))
+		return context
+
 def add_appointment(request):
 	form = Appointmentform()
 	context = { 'form' : form,
@@ -179,6 +192,29 @@ def edit_appointment(request, id):
 #---------------------Prescription-----------------------------#
 
 
+# class PrescriptionViewSet(viewsets.ModelViewSet):
+# 	queryset = Prescription.objects.all()
+# 	serializer_class = PrescriptionSerializer
+# 	filter_backends = (filters.OrderingFilter,filters.SearchFilter,)
+# 	ordering_fields = ('id','student', 'doctor','medicine_name','medicine_type','how_to_use')
+# 	search_fields = ('id','medicine_name','medicine_type','how_to_use')
+
+# 	def list(self, request, *args, **kwargs):
+# 		queryset = self.filter_queryset(self.get_queryset())
+
+# 		if isApiUserPharmacist(request):
+# 			print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+# 			print(isApiUserPharmacist(request))
+# 		   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
+
+# 		page = self.paginate_queryset(queryset)
+# 		if page is not None:
+# 			serializer = self.get_serializer(page, many=True)
+# 			return self.get_paginated_response(serializer.data)
+
+# 		serializer = self.get_serializer(queryset, many=True)
+# 		return Response(serializer.data)
+		
 class PrescriptionViewSet(viewsets.ModelViewSet):
 	queryset = Prescription.objects.all()
 	serializer_class = PrescriptionSerializer
@@ -186,12 +222,12 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 	ordering_fields = ('id','student', 'doctor','medicine_name','medicine_type','how_to_use')
 	search_fields = ('id','medicine_name','medicine_type','how_to_use')
 
-	def list(self, request, *args, **kwargs):
+	def list(self, request, args, *kwargs):
 		queryset = self.filter_queryset(self.get_queryset())
 
-		if isApiUserPharmacist(request):
-			print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
-			print(isApiUserPharmacist(request))
+		#if isApiUserPharmacist(request):
+		#	print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+		#	print(isApiUserPharmacist(request))
 		   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
 
 		page = self.paginate_queryset(queryset)
@@ -217,10 +253,6 @@ def add_prescriptions(request, appointment_id=None):
 				'app_url':'prescriptions',
 			}
 	return render(request, 'users/prescriptions/form.html',context)
-
-
-
-
 
 def edit_prescriptions(request, id):
 	instance = get_object_or_404(Prescription, appointment=id)

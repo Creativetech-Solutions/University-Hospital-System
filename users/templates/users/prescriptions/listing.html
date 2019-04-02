@@ -56,7 +56,7 @@
             "serverSide": true,
             "responsive": true,
             "ajax":{
-                url:"http://127.0.0.1:8000/api/prescriptions?format=datatables",
+                url: "api/prescriptions?format=datatables",
                 headers: { 'Authorization': 'Token {{request|getToken}}' },
                 },
             "columns": [

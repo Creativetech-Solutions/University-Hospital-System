@@ -47,4 +47,24 @@ function checkRequiredFields(formEl){
 }
 
 //$('#date-format').bootstrapMaterialDatePicker({ format : 'dddd DD MMMM YYYY - HH:mm' });
-$('#date-format').bootstrapMaterialDatePicker({ format : 'Y-M-D H:M' });
+// $('#date-format').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm' });
+$('#date-format').daterangepicker({
+    "singleDatePicker": true,
+    "timePicker": true,
+    "timePickerIncrement": 30,
+    locale: {
+        format: 'YYYY-MM-DD HH:mm:ss'
+    }
+});
+// $('.timeinput').bootstrapMaterialDatePicker({ date: false, format:'HH:mm' });
+$('.timeinput').daterangepicker({
+    "singleDatePicker": true,
+    timePicker: true,
+    timePicker24Hour: true,
+    timePickerIncrement: 30,
+    locale: {
+        format: 'H:m'
+    }
+}).on('show.daterangepicker', function (ev, picker) {
+    picker.container.find(".calendar-table").hide();
+});

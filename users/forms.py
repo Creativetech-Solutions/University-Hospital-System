@@ -1,13 +1,13 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Field
+from crispy_forms.layout import Layout, Row, Field, Fieldset
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Profile, Appointment,Prescription
 from default.templatetags.custom_tags import *
 
 class UserCreationform(UserCreationForm):
-    email = forms.EmailField()
+    email = forms.EmailField(required=True)
     groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), required=True, initial=0)
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -54,7 +54,7 @@ class Doctorsform(forms.ModelForm):
         if user is not None:
             self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(id=user.id), empty_label=None)
         
-        self.fields['timing'].widget.attrs['rows'] = 3
+        # self.fields['timing'].widget.attrs['rows'] = 3
         self.fields['notes'].widget.attrs['rows'] = 3
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -79,14 +79,22 @@ class Doctorsform(forms.ModelForm):
                 Field('height', wrapper_class='col-sm-3'),
                 Field('mobile_no', wrapper_class='col-sm-3'),
             ),
+            Fieldset('Timings',
             Row(
-                Field('timing', wrapper_class='col-sm-12'),
+                Field('session_1_start', wrapper_class='col-sm-3'),
+                Field('session_1_end', wrapper_class='col-sm-3'),
+                Field('session_2_start', wrapper_class='col-sm-3'),
+                Field('session_2_end', wrapper_class='col-sm-3'),
+                ),
+            ),
+            Row(
+                # Field('timing', wrapper_class='col-sm-12'),
                 Field('notes', wrapper_class='col-sm-12'),
             ),
         )
     class Meta:
         model = Profile
-        fields = ('user','gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no', 'timing', 'avatar',
+        fields = ('user','session_1_start', 'session_1_end', 'session_2_start', 'session_2_end', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no','avatar',
 				'martial_status', 'weight', 'height', 'blood_type', 'notes')
 
 
