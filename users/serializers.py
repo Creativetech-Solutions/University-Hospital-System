@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import Profile, Appointment,Prescription
+from users.models import Profile, Appointment,Prescription,Prescription_info
 from hospital.models import MedicineType
 from django.contrib.auth.models import User ,Group
 from django.contrib.auth.hashers import make_password
@@ -54,7 +54,7 @@ class UsersSerializer(serializers.ModelSerializer):   #  used to get user profil
 			raise serializers.ValidationError("Password and confirm password do not match")
 		elif password is None or password == '':
 			raise serializers.ValidationError("Password can not be null")
-		else:    
+		else:
 			return password
 
 	def update(self, instance, validated_data):
@@ -63,7 +63,7 @@ class UsersSerializer(serializers.ModelSerializer):   #  used to get user profil
 		if 'password1' in request.data:
 			# update password
 			password = request.data['password1']
-			if password: 
+			if password:
 				user.set_password(password)
 		user.save()
 
@@ -93,6 +93,15 @@ class ProfileSerializer(serializers.ModelSerializer):   #  used to get user prof
 		'martial_status', 'weight', 'height', 'blood_type', 'notes', 'created_date', 'modified_date')
 
 class DoctorsSerializer(serializers.ModelSerializer):   #  used to get user profile
+    user = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    is_active=serializers.CharField(source='user.is_active', read_only=True)
+    class Meta:
+        model = Profile
+        fields = ('user_id','user','title','last_name','first_name','email', 'is_active', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no', 'timing', 'avatar',
+        'martial_status', 'weight', 'height', 'notes', 'created_date', 'modified_date')
 	user = serializers.CharField(source='user.username', read_only=True)
 	email = serializers.CharField(source='user.email', read_only=True)
 	first_name = serializers.CharField(source='user.first_name', read_only=True)
@@ -101,7 +110,7 @@ class DoctorsSerializer(serializers.ModelSerializer):   #  used to get user prof
 	class Meta:
 		model = Profile
 		fields = ('user_id','user','title','last_name','first_name','email', 'is_active', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no' 'session_1_start', 'session_1_end', 'session_2_start', 'session_2_end', 'avatar',
-		'martial_status', 'weight', 'height', 'blood_type', 'notes', 'created_date', 'modified_date')
+		'martial_status', 'weight', 'height', 'notes', 'created_date', 'modified_date')
 
 
 class StudentSerializer(serializers.ModelSerializer):   #  used to get user profile
@@ -143,7 +152,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
 		if 'student_id' not in request.data:
 			validated_data['refer_to'] = User.objects.get(id=request.data['refer_to']) # for saving
 		appointment = Appointment.objects.create(**validated_data)
-		return appointment    
+		return appointment
 
 	class Meta:
 		model = Appointment
@@ -155,12 +164,12 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
 	medicine_type = serializers.CharField(source='medicine_type.name', read_only=True)
 	def create(self, validated_data):
 
-		# Create the object instance...
-		request = self.context.get("request")
-		validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
-		validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
-		prescription = Prescription.objects.create(**validated_data)
-		return prescription
+        # Create the object instance...
+        request = self.context.get("request")
+        validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
+        validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
+        Prescription_info = Prescription_info.objects.create(**validated_data)
+        return Prescription_info
 
 	def update(self, instance, validated_data):
 		instance.medicine_name = validated_data.get('medicine_name', instance.medicine_name)
@@ -171,9 +180,9 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
 		instance.save()
 		return instance
 
-	class Meta:
-		model = Prescription
-		fields = ('doctor','student','medicine_name','medicine_type','how_to_use','appointment','edit_by')
+    class Meta:
+        model = Prescription_info
+        fields = ('doctor','student','medicine_name','medicine_type','how_to_use','appointment','edit_by')
 
 
 

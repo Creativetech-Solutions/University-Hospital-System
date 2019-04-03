@@ -4,6 +4,7 @@ from pygments.styles import get_all_styles
 from django.contrib.auth.models import User
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
+from PIL import Image # resize image
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -25,6 +26,8 @@ class Profile(models.Model):
 	session_2_start = models.TimeField(null=True, blank=True)
 	session_2_end = models.TimeField(null=True, blank=True)
 	avatar = models.CharField(max_length=250, blank=True, null=True)
+
+	avatar = models.ImageField(default='default.png',upload_to='static/media/profile')
 	MARTIAL_STATUS = (
 		('married', 'Married'),
 		('unmarried', 'Unmarried'),
@@ -47,12 +50,12 @@ class Profile(models.Model):
 	notes = models.TextField(blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
-
 	class Meta:
 		ordering = ('created_date',)
 
 	def __str__(self): # converting obj
 		return f'{self.user.username} Profile'
+
 
 
 class Appointment(models.Model):
@@ -71,7 +74,7 @@ class Appointment(models.Model):
 	# status = models.BooleanField(default=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
-	def __str__(self): # converting obj
+	def __str__(self): # converted obj
 		return f'{self.student.username}- App. # {self.id}'
 
 
@@ -84,6 +87,19 @@ class Prescription(models.Model):
 	edit_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='edit_by', blank=True, null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
-	def __str__(self): # converting obj
-    		return f'{self.appointment.student.username} Appointment with {self.appointment.doctor.username} '
+	def __str__(self): # convert obj
+		managed = False
+		return f'{self.appointment.student.username} Appointment with {self.appointment.doctor.username} '
+
+class Prescription_info(models.Model):
+	appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='appointment')
+	how_to_use = models.TextField(blank=True, null=True)
+	medicine_name = models.CharField(max_length=250, blank=True, null=True)
+	medicine_type = models.ForeignKey("hospital.MedicineType", on_delete=models.SET_NULL, blank=True, null=True)
+	created_date = models.DateTimeField(auto_now_add=True)
+	edit_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='edit_user', blank=True, null=True)
+	modified_date = models.DateTimeField(auto_now=True)
+	def __str__(self): # convert obj
+		managed = False
+		return f'{self.medicine_name}'
 	

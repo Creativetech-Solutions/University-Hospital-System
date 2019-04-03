@@ -23,12 +23,50 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
+                    <div class="table-content p-l-30 p-r-30">
+            <div class="project-table">
+                <table id="e-product-list" class="table table-striped dt-responsive nowrap" width="100%" cellspacing="0" style="min-width: 600px">
+                    <tbody>
+                    {% if data %}
+                    {% for detail in data %}
+                        <tr>
+                            <td class="pro-list-img">
+                                {{ detail.medicine_type }}
+                                {#  <img src="{% static '/media/medicine_icons/default.png' %}" class="img-fluid" alt="tbl">  #}
+                            </td>
+                            <td class="pro-name">
+                                <h6>{{ detail.medicine_name }}</h6>
+                                <span>{{ detail.how_to_use }}</span>
+                            </td>
+                            <td class="action-icon">
+                                <a href="#!" data-id='{{detail.id}}' class="delete text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="icofont icofont-ui-delete"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
                     <form method="POST" class="form" action="">
                         <fieldset class="form-group">
                             <legend class="border-bottom mb-4">{% if appointment  %} Edit  {{ app|capfirst }}  {% else %} Add {% endif %} Prescriptions </legend>
                            {% crispy form %}
                            <div class="form-group">
-                                <button class="btn btn-info save-basic" type="submit">Save </button>
+                                <button class="btn btn-info save-basic" type="submit">Save and add Another</button>
+                                <button class="btn btn-info save-redirect" type="submit">Save</button>
                                 <p class="text-danger" id="error"> </p>
                             </div>
                         </fieldset>
@@ -52,20 +90,33 @@
             $.ajax({
                type: method_type,
                url: url,
-               headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
-               data: JSON.stringify(from_data),
+               headers: {'Authorization': "Token {{request|getToken}}"},
+               data: from_data,
                success: function (data) {
-                   // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
-                   if(redirect_url == null)
-                           redirect_url ="/appointments/"+data.appointment+'/';
-                   window.location.href =redirect_url;
-
+                   $.toaster({ priority : 'success', title : 'Status', message : 'Prescription Added SuccessFully!'});
+                   location.reload(true);
                 }
             });
         }
 
+        jQuery(document).on('click','.save-redirect',function(e){
+            e.preventDefault();
+            var redirect_url = "{% url 'appointment_detail_page' appointment_id %}";
+            var name = $('input[name="medicine_name"]').val();
+            if(name == ''){
+                $.toaster({ priority : 'warning', title : 'Status', message : 'Fill required field!'});
+                return false;
+            }
+            $( ".save-basic" ).click();
+            window.location.href = "{% url 'appointment_detail_page' appointment_id %}";
+        });
         jQuery(document).on('click','.save-basic',function(e){
             e.preventDefault();
+            var name = $('input[name="medicine_name"]').val();
+            if(name == ''){
+                $.toaster({ priority : 'warning', title : 'Status', message : 'Fill required field!'});
+                return false;
+            }
             {% if obj.appointment_id %} // for edit prescription case
                 var url = "{% url app_url %}"+'/'+"{{obj.appointment_id}}"+'/';
                 var redirect_url =  "{% url 'prescriptions_detail_page' obj.appointment_id %}";
@@ -73,6 +124,7 @@
                 {% if appointment_id is not None %} // added from the appointment detail page
                     var url = "{% url app_url %}";
                     var redirect_url = "{% url 'appointment_detail_page' appointment_id %}";
+
             {% else %} // direct add from main page
                     var url = "{% url app_url %}";
                     var redirect_url = null
@@ -84,5 +136,24 @@
         })
 
     });
+    jQuery(document).on('click','.delete',function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'delete_prescriptions_info' %}",
+            headers: {'Authorization': "Token {{request|getToken}}"},
+            data: {
+                "csrfmiddlewaretoken": '{{ csrf_token }}',
+                'id':id,
+            },
+
+            success: function (data) {
+                $.toaster({ priority : 'success', title : 'Status', message : 'Prescription Added SuccessFully!'});
+                location.reload(true);
+            }
+        });
+    });
+
 </script>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
  <div id="user_profile" class="tab-pane container fade">
     <div class="card-block">
-        <form method="POST" class="profile_form" action="{% url app %}">
+        <form method="POST" class="profile_form" action="{% url app %}" enctype="multipart/form-data">
             <fieldset class="form-group">
                 {% crispy profile_form %}
                 <div class="form-group">
