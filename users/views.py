@@ -46,6 +46,7 @@ class UserViewSet(viewsets.ModelViewSet, generics.RetrieveAPIView):
 			return self.get_paginated_response(serializer.data)
 		serializer = self.get_serializer(queryset, many=True)
 		# return apiCustomizedResponse(serializer.data)
+		return Response(serializer.data)
 
 	def perform_create(self, serializer):
 		return serializer.save()
@@ -62,10 +63,10 @@ class UserViewSet(viewsets.ModelViewSet, generics.RetrieveAPIView):
 		headers = self.get_success_headers(serializer.data)
 		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-	def retrieve(self, request, *args, **kwargs):
-		instance = self.get_object()
-		serializer = self.get_serializer(instance)
-		data = serializer.data
+	# def retrieve(self, request, *args, **kwargs):
+	# 	instance = self.get_object()
+	# 	serializer = self.get_serializer(instance)
+	# 	data = serializer.data
 		# here you can manipulate your data response
 		# return apiCustomizedResponse(data)
 
@@ -192,6 +193,29 @@ def edit_appointment(request, id):
 #---------------------Prescription-----------------------------#
 
 
+class PrescriptionViewSet(viewsets.ModelViewSet):
+	queryset = Prescription.objects.all()
+	serializer_class = PrescriptionSerializer
+	filter_backends = (filters.OrderingFilter,filters.SearchFilter,)
+	ordering_fields = ('id','student', 'doctor','medicine_name','medicine_type','how_to_use')
+	search_fields = ('id','medicine_name','medicine_type','how_to_use')
+
+	# def list(self, request, *args, **kwargs):
+	# 	queryset = self.filter_queryset(self.get_queryset())
+
+	# 	# if isApiUserPharmacist(request):
+	# 	# 	print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+	# 	# 	print(isApiUserPharmacist(request))
+	# 	   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
+
+	# 	page = self.paginate_queryset(queryset)
+	# 	if page is not None:
+	# 		serializer = self.get_serializer(page, many=True)
+	# 		return self.get_paginated_response(serializer.data)
+
+	# 	serializer = self.get_serializer(queryset, many=True)
+	# 	return Response(serializer.data)
+		
 # class PrescriptionViewSet(viewsets.ModelViewSet):
 # 	queryset = Prescription.objects.all()
 # 	serializer_class = PrescriptionSerializer
@@ -199,12 +223,12 @@ def edit_appointment(request, id):
 # 	ordering_fields = ('id','student', 'doctor','medicine_name','medicine_type','how_to_use')
 # 	search_fields = ('id','medicine_name','medicine_type','how_to_use')
 
-# 	def list(self, request, *args, **kwargs):
+# 	def list(self, request, args, *kwargs):
 # 		queryset = self.filter_queryset(self.get_queryset())
 
-# 		if isApiUserPharmacist(request):
-# 			print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
-# 			print(isApiUserPharmacist(request))
+# 		#if isApiUserPharmacist(request):
+# 		#	print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+# 		#	print(isApiUserPharmacist(request))
 # 		   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
 
 # 		page = self.paginate_queryset(queryset)
@@ -214,29 +238,6 @@ def edit_appointment(request, id):
 
 # 		serializer = self.get_serializer(queryset, many=True)
 # 		return Response(serializer.data)
-		
-class PrescriptionViewSet(viewsets.ModelViewSet):
-	queryset = Prescription.objects.all()
-	serializer_class = PrescriptionSerializer
-	filter_backends = (filters.OrderingFilter,filters.SearchFilter,)
-	ordering_fields = ('id','student', 'doctor','medicine_name','medicine_type','how_to_use')
-	search_fields = ('id','medicine_name','medicine_type','how_to_use')
-
-	def list(self, request, args, *kwargs):
-		queryset = self.filter_queryset(self.get_queryset())
-
-		#if isApiUserPharmacist(request):
-		#	print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
-		#	print(isApiUserPharmacist(request))
-		   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
-
-		page = self.paginate_queryset(queryset)
-		if page is not None:
-			serializer = self.get_serializer(page, many=True)
-			return self.get_paginated_response(serializer.data)
-
-		serializer = self.get_serializer(queryset, many=True)
-		return Response(serializer.data)
 
 def prescriptions_listing(request, id): # by Appointment
 	return render(request,'users/prescriptions/listing.html' )

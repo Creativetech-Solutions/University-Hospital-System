@@ -150,7 +150,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
 		fields = ('id','student','doctor','datetime','doctor_id','student_id','disease', 'notes', 'status','created_date', 'modified_date','refer_to','refer_to_name')
 
 class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user Prescription
-	doctor = serializers.CharField(source='appointment.doctor', read_only=True) # doctor name of model fields and username from user
+	doctor = serializers.CharField(source='appointment.doctor.username', read_only=True) # doctor name of model fields and username from user
 	student = serializers.CharField(source='appointment.student.username', read_only=True)
 	medicine_type = serializers.CharField(source='medicine_type.name', read_only=True)
 	def create(self, validated_data):
