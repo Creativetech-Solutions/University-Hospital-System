@@ -1,0 +1,225 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Calender css -->
+
+<link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.min.css " rel="stylesheet"
+      type="text/css" media="print"/>
+<style>
+    a.fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end {
+        border-color: rgb(57, 68, 78) !important;
+        padding: 4px;
+        bottom: auto !important;
+    }
+
+    a.fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-resizable {
+        bottom: auto !important;
+        background-color: #39444e;
+        border: none;
+        color: white
+    }
+
+    /*.fc-time-grid-event .fc-content{background-color: #3a87ad;padding:4px;}*/
+    .tooltiptopicevent {
+        width: auto;
+        height: auto;
+        background-color: #39444e;
+        position: absolute;
+        z-index: 10001;
+        padding: 10px 10px 10px 10px;
+        line-height: 200%;
+        border-radius: 5px;
+        color: white
+    }
+
+    .fc-time-grid-event.fc-v-event.fc-event.fc-start.fc-end {
+        bottom: auto !important;
+    }
+</style>
+<!-- Container-fluid starts -->
+<div class="container-fluid">
+    <div>
+        <!-- Header Starts -->
+        <div class="row">
+            <div class="col-sm-12 p-0">
+                <div class="main-header">
+                    <h4>Appointments</h4>{{request.test}}
+                    <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                        <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="#">Appointments</a>
+                        </li>
+                    </ol>
+                    <div style="right: 15px;position: absolute;bottom: 12px;">
+                        <a href="{% url 'appointments_listing' %}"
+                           class="btn btn-mini btn-primary waves-effect waves-light">Listing View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header end -->
+
+        <!-- Row start -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id='calendar'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Row end -->
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script>
+<script>
+    "use strict";
+    $(document).ready(function () {
+        $('#external-events .fc-event').each(function () {
+
+            // store data so the calendar knows to render an event upon drop
+            $(this).data('event', {
+                title: $.trim($(this).text()), // use the element's text as the event title
+                stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+
+            // make the event draggable using jQuery UI
+            /*   $(this).draggable({
+             zIndex: 999,
+             revert: true,      // will cause the event to go back to its
+             revertDuration: 0  //  original position after the drag
+             });*/
+
+        });
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay,listMonth'
+            },
+            defaultDate: '{% now "Y-m-d" %}',
+            navLinks: true, // can click day/week names to navigate views
+            businessHours: true, // display business hours
+            // editable: true,
+            // droppable: true, // this allows things to be dropped onto the calendar
+            disableDragging: true,
+            drop: function () {
+
+                // is the "remove after drop" checkbox checked?
+                if ($('#checkbox2').is(':checked')) {
+                    // if so, remove the element from the "Draggable Events" list
+                    $(this).remove();
+                }
+            },
+            eventMouseover: function (data, event, view) {
+                var tooltip = '<div class="tooltiptopicevent">' + 'Student ' + ': ' + data.student + '</br>';
+                {%
+                    if request | isSuperAdmin %}
+                tooltip += 'Doctor: ' + data.doctor + '</br>';
+                {%
+                    endif %
+                }
+                tooltip += 'Created ' + ': ' + data.created + '</br>' + 'Notes ' + ': ' + data.notes + '</div>';
+
+
+                $("body").append(tooltip);
+                $(this).mouseover(function (e) {
+                    $(this).css('z-index', 10000);
+                    $('.tooltiptopicevent').fadeIn('500');
+                    $('.tooltiptopicevent').fadeTo('10', 1.9);
+                }).mousemove(function (e) {
+                    $('.tooltiptopicevent').css('top', e.pageY + 10);
+                    $('.tooltiptopicevent').css('left', e.pageX + 20);
+                });
+
+
+            },
+            eventMouseout: function (data, event, view) {
+                $(this).css('z-index', 8);
+
+                $('.tooltiptopicevent').remove();
+
+            },
+            dayClick: function () {
+                tooltip.hide()
+            },
+            eventResizeStart: function () {
+                tooltip.hide()
+            },
+            eventDragStart: function () {
+                tooltip.hide()
+            },
+            viewDisplay: function () {
+                tooltip.hide()
+            },
+            eventClick: function (event) {
+                window.location.assign('/appointments/' + event.id);
+            },
+            events: [
+            { % for appointment in appointments %
+        }
+        {
+            start: '{{ appointment.datetime }}',
+                    textColor
+        :
+            '#000',
+            { %
+            if appointment.status == 'N' %}
+            title: "App # {{ appointment.id}}",
+                    backgroundColor
+        :
+            '#3a87ad'
+            {% else %
+            }
+            title: "App # {{ appointment.id}} - Assigned",
+                    backgroundColor
+        :
+            '#5ecd5e'
+            {%
+                endif %
+            }
+        ,
+            id: '{{appointment.id}}',
+                    student
+        :
+            '{{appointment.student.username}}',
+                    doctor
+        :
+            '{{appointment.doctor.username}}',
+                    notes
+        :
+            '{{appointment.notes}}',
+                    created
+        :
+            '{{appointment.created_date}}',
+        }
+        ,
+        {%
+            endfor %
+        }
+        ]
+    })
+        ;
+
+    });
+
+</script>
+
+{% endblock %}
