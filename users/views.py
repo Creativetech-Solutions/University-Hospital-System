@@ -22,6 +22,7 @@ from .forms import *
 from default.templatetags.custom_tags import *
 from default.utils import *
 from rest_framework.pagination import PageNumberPagination
+from django.views.generic import TemplateView
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -30,7 +31,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 	max_page_size = 1000
 
 # ---------User views --------------#
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet, generics.RetrieveAPIView):
 
 	queryset = User.objects.all()
 	serializer_class = UsersSerializer
@@ -161,6 +162,18 @@ class AppointmentsViewSet(viewsets.ModelViewSet):
 def appointments_listing(request):
 	return render(request,'users/appointments/listing.html')
 
+class AppointmentCalendar(TemplateView):
+	template_name = "users/appointments/calendar.html"
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		if isSuperAdmin(self.request):
+			appointments = Appointment.objects.all();
+			context['appointments'] = appointments
+		elif isDoctor(self.request):
+			context['appointments'] = Appointment.objects.filter(doctor=getUser(self.request,'id'))
+		return context
+
 def add_appointment(request):
 	form = Appointmentform()
 	context = { 'form' : form,
@@ -208,9 +221,9 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 		if appointment_id: # use to list prescriptions in Appointment Details Page
 			queryset =  queryset.filter(appointment_id=appointment_id)
 
-		#if isApiUserPharmacist(request):
-		#	print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
-		#	print(isApiUserPharmacist(request))
+		if isApiUserPharmacist(request):
+			print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+			print(isApiUserPharmacist(request))
 		   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
 
 		page = self.paginate_queryset(queryset)

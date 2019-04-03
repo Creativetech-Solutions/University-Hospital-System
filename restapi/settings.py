@@ -146,9 +146,15 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-DATETIME_FORMAT = 'y-m H:M'
-DATE_FORMAT = 'y-m-d'
-TIME_FORMAT = 'H:M'
+# DATETIME_FORMAT = 'y-m H:M'
+# DATE_FORMAT = 'y-m-d'
+# TIME_FORMAT = 'H:M'
+
+DATETIME_FORMAT = 'Y-m-d H:i:s'
+DATE_FORMAT = 'Y-m-d'
+TIME_FORMAT = 'H:i:s'
+
+
 USE_I18N = False
 
 USE_TZ = False
