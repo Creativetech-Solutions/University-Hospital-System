@@ -1,0 +1,185 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Row Starts -->
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <div class="main-header">
+                <h4>Doctor</h4>
+                <ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+                    <li class="breadcrumb-item"><a href="/"><i class="icofont icofont-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Doctors</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#">{{obj.username}} Profile</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-4 col-md-4">
+        <div class="card left">
+            <div class="user-block-2">
+                <img class="img-fluid" src="/{{ obj.profile.avatar }}" alt="user-header">
+                <h5>{{obj.first_name}}{{obj.last_name}} </h5>
+                <h6>{{obj.profile.specialty}}</h6>
+            </div>
+            <div class="card-block">
+
+                <div class="user-block-2-activities">
+
+                    <div class="user-block-2-active">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <h6 class="">Mobile Number</h6>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <i class="pull-right">{{obj.profile.mobile_no}}</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-block-2-activities">
+                    <div class="user-block-2-active">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <h6 class="">Email</h6>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <i class="pull-right">{{obj.email}}</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-block-2-activities">
+                    <div class="user-block-2-active">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <h6 class="">Gender</h6>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <i class="pull-right">{{obj.profile.martial_status}}</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-block-2-activities">
+                    <div class="user-block-2-active">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <h6 class="">Experience</h6>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <i class="pull-right">{{obj.profile.experience}}</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-header-text">Medical Info</h5>
+            </div>
+            <div class="card-block">
+                <div id="barchart" style="min-width: 310px; margin: 0 auto;min-height: 372px;">
+                    <div class="card-block">
+                        <div class="user-block-2-activities">
+                            <div class="user-block-2-active">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <h6 class="">Specialization </h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <i class="pull-right">{{obj.profile.specialty}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-block-2-activities">
+                            <div class="user-block-2-active">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <h6 class="">Education and Qualification</h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <i class="pull-right">{{obj.profile.qualification}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-block-2-activities">
+                            <div class="user-block-2-active">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <h6 class="">Designation</h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <i class="pull-right">{{obj.profile.designation}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-block-2-activities">
+                            <div class="user-block-2-active">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <h6 class="">Primary Hospital</h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <i class="pull-right">{{obj.profile.primary_hospital}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-block-2-activities">
+                            <div class="user-block-2-active">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <h6 class="">Secondary Hospital</h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <i class="pull-right">{{obj.profile.secondary_hospital}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-block-2-activities">
+                            <div class="user-block-2-active">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <h6 class="">TIME</h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <i class="pull-right">{{obj.profile.timing}}</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+    jQuery(document).ready(function($) {
+
+    });
+</script>
+
+{% endblock %}

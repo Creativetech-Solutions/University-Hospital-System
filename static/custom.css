@@ -38,3 +38,17 @@ a.tabledit-edit-button.btn.btn-primary.waves-effect.waves-light {
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 }
+.card-header {
+    padding: 30px;
+    background-color: transparent;
+    color: #757575;
+    border-bottom: 6px solid darkgray;
+    margin-bottom: 20px;
+}
+.card-header-text {
+    font-size: 18px;
+    font-weight: 900;
+}
+.user-block-2{
+    padding: 5px 0;
+}

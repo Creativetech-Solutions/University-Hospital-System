@@ -1,10 +1,14 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework import status
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.decorators import action
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from users.models import Profile, Appointment
 from hospital.models import Hospital
@@ -18,6 +22,7 @@ from .forms import *
 from default.templatetags.custom_tags import *
 from default.utils import *
 from rest_framework.pagination import PageNumberPagination
+
 
 class StandardResultsSetPagination(PageNumberPagination):
 	page_size = 100
@@ -44,7 +49,10 @@ class UserViewSet(viewsets.ModelViewSet):
 			serializer = self.get_serializer(page, many=True)
 			return self.get_paginated_response(serializer.data)
 		serializer = self.get_serializer(queryset, many=True)
-		return apiCustomizedResponse(serializer.data)
+		print(serializer.data)
+
+		#return apiCustomizedResponse(serializer.data)
+		return Response(serializer.data)
 
 	def perform_create(self, serializer):
 		return serializer.save()
@@ -59,14 +67,16 @@ class UserViewSet(viewsets.ModelViewSet):
 		post_data = request.data['groups']
 		user.groups.add(post_data)
 		headers = self.get_success_headers(serializer.data)
-		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+		#return Response(serializer.data)
+		return Response(serializer.data)
 
 	def retrieve(self, request, *args, **kwargs):
 		instance = self.get_object()
 		serializer = self.get_serializer(instance)
 		data = serializer.data
 		# here you can manipulate your data response
-		return apiCustomizedResponse(data)
+		#return apiCustomizedResponse(data)
+		return Response(serializer.data)
 
 class ProfileViewSet(viewsets.ModelViewSet):
 	queryset = Profile.objects.all()
@@ -114,6 +124,12 @@ def edit_user(request, id):
 		 context['profile_form']  = Pharmacyform(request.POST or None, instance=profile, user=user)
 
 	return render(request,'users/user/form.html',context)
+
+def user_profile(request, id):
+	user = get_object_or_404(User, id=id)
+	context = {	'obj':user}
+	print(user)
+	return render(request,'users/doctors/profile.html',context)
 
 # ---------Appointment views --------------#
 
@@ -180,7 +196,7 @@ def edit_appointment(request, id):
 
 
 class PrescriptionViewSet(viewsets.ModelViewSet):
-	queryset = Prescription.objects.all()
+	queryset = Prescription_info.objects.all()
 	serializer_class = PrescriptionSerializer
 	filter_backends = (filters.OrderingFilter,filters.SearchFilter,)
 	ordering_fields = ('id','student', 'doctor','medicine_name','medicine_type','how_to_use')
@@ -188,10 +204,13 @@ class PrescriptionViewSet(viewsets.ModelViewSet):
 
 	def list(self, request, *args, **kwargs):
 		queryset = self.filter_queryset(self.get_queryset())
+		appointment_id = request.GET.get('appointment_id')
+		if appointment_id: # use to list prescriptions in Appointment Details Page
+			queryset =  queryset.filter(appointment_id=appointment_id)
 
-		if isApiUserPharmacist(request):
-			print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
-			print(isApiUserPharmacist(request))
+		#if isApiUserPharmacist(request):
+		#	print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttteeeeeeennnnnnnnnnny')
+		#	print(isApiUserPharmacist(request))
 		   #queryset = queryset.filter(groups__name__in=['Student','Doctor'])
 
 		page = self.paginate_queryset(queryset)
@@ -218,9 +237,39 @@ def add_prescriptions(request, appointment_id=None):
 			}
 	return render(request, 'users/prescriptions/form.html',context)
 
+def add_prescriptions_info(request, appointment_id):
+	print(appointment_id)
+	queryset = Prescription_info.objects.filter(appointment_id=appointment_id)
+	print(queryset)
+	form = Prescription_info_form(appointment=appointment_id)
+	context = { 'form' : form,
+				'app':'Prescription',
+				'data':queryset,
+				'appointment_id':appointment_id,
+				'type':'POST',
+				'app_url':'save_prescriptions_info',
+			}
+	return render(request, 'users/prescriptions/form.html',context)
 
+@csrf_exempt
+@api_view(['POST'])
+def save_prescriptions_info(request,appointment_id=None):
+	obj = Prescription_info()
+	obj.appointment_id = request.POST.get('appointment')
+	obj.medicine_name  = request.POST.get('medicine_name')
+	obj.medicine_type_id  = request.POST.get('medicine_type')
+	obj.how_to_use     = request.POST.get('how_to_use')
+	obj.save()
+	return Response({'Success': 'Record saved Sucessfully'}, status=status.HTTP_200_OK)
 
-
+@csrf_exempt
+@api_view(['POST'])
+def delete_prescriptions_info(request):
+  id = request.POST.get('id')
+  print(id)
+  obj = Prescription_info.objects.get(id = id)
+  obj.delete()
+  return Response({'Success': 'Record  Sucessfully Deleted'}, status=status.HTTP_200_OK)
 
 def edit_prescriptions(request, id):
 	instance = get_object_or_404(Prescription, appointment=id)

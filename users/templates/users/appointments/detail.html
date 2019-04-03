@@ -199,7 +199,8 @@
                                                       </div>
                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
                                                    <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
                                                                 <i class="icofont icofont-address-book"></i>
@@ -212,7 +213,7 @@
                                                    </div>
 
                                                 </div>
-                                                <div class="col-sm-6">
+                                                   <div class="col-sm-6">
                                                    <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
                                                                 <i class="icofont icofont-address-book"></i>
@@ -224,6 +225,7 @@
                                                       </div>
                                                    </div>
 
+                                                </div>
                                                 </div>
                                              </div>
                                        </div>
@@ -237,8 +239,9 @@
                                     </div>
                                     <div class="container">
                                        <div class="md-float-material">
-                                          <div class="row">
-                                             <div class="col-sm-6">
+                                          <div class="pre_row">
+                                          <div class="app_row row">
+                                             <div class="col-sm-3">
                                                 <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
                                                           <i class="icofont icofont-user"></i>
@@ -251,7 +254,7 @@
                                                 </div>
                                              </div>
 
-                                             <div class="col-sm-6">
+                                             <div class="col-sm-3">
                                                 <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
                                                           <i class="icofont icofont-envelope-open"></i>
@@ -263,21 +266,22 @@
                                                    </div>
                                                 </div>
                                              </div>
-
-                                          </div>
-                                          <div class="col-sm-12">
-                                             <div class="md-group-add-on p-relative">
+                                             <div class="col-sm-6">
+                                                <div class="md-group-add-on p-relative">
                                                       <span class="md-add-on">
                                                                 <i class="icofont icofont-address-book"></i>
                                                             </span>
-                                                <div class="md-input-wrapper">
-                                                   <textarea class="md-form-control md-static" readonly name="how_to_use" cols="2" rows="2"></textarea>
-                                                   <label>How To Use   </label>
+                                                   <div class="md-input-wrapper">
+                                                      <textarea class="md-form-control md-static" readonly name="how_to_use" cols="2" rows="1"></textarea>
+                                                      <label>How To Use   </label>
 
+                                                   </div>
                                                 </div>
                                              </div>
+
                                           </div>
 
+                                          </div>
                                           <div class="formss">
                                              {% if request|getUserGroup != 'Student' or request|getUserGroup == 'Pharmacist'  %}
                                                 {% crispy Appointmentreferform %}
@@ -336,11 +340,24 @@
        function getPrescriptioninfo(){
           $.ajax({
              type: 'GET',
-             url: '/api/prescriptions/{{appointment_id}}',
+             url: '/api/prescriptions',
+             data:{'appointment_id':'{{appointment_id}}'},
              headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
              success: function (data) {
-                $(".formss").addClass('hidden');
-                setFormData(data);
+                var html = $(".pre_row").html();
+                var datas = data.results;
+                $(datas).each(function(index,values){
+                   $(".pre_row").append(html);
+                   $('.app_row:last').addClass('rowNo'+index);
+                   for(var attr in values){
+                      if (values.hasOwnProperty(attr)) {
+                         if(values[attr] == '' || values[attr]==null)
+                            values[attr] = '----';
+                         $('.rowNo'+index).find('input[name="'+attr+'"]').val(values[attr]);
+                         $('.rowNo'+index).find('textarea[name="'+attr+'"]').html(values[attr]);
+                      }
+                   }
+                });
              }
           });
        }
@@ -385,7 +402,6 @@
                   $('textarea[name="'+attr+'"]').html(data[attr]);
                 }
             }
-    
         }
        function saveFormData(url, btnEl, method_type){
              var array = jQuery('form').serializeArray();

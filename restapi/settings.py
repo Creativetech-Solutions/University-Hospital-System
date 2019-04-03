@@ -162,9 +162,12 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_ROOT =os.path.join(BASE_DIR,'static/media') #os operating system
+MEDIA_URL  ='/media/'
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 SESSION_COOKIE_NAME = 'hms.com'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 
 LOGIN_URL = 'login'

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import Profile, Appointment,Prescription
+from users.models import Profile, Appointment,Prescription,Prescription_info
 from hospital.models import MedicineType
 from django.contrib.auth.models import User ,Group
 from django.contrib.auth.hashers import make_password
@@ -95,7 +95,7 @@ class DoctorsSerializer(serializers.ModelSerializer):   #  used to get user prof
     class Meta:
         model = Profile
         fields = ('user_id','user','title','last_name','first_name','email', 'is_active', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no', 'timing', 'avatar',
-        'martial_status', 'weight', 'height', 'blood_type', 'notes', 'created_date', 'modified_date')
+        'martial_status', 'weight', 'height', 'notes', 'created_date', 'modified_date')
 
 
 class StudentSerializer(serializers.ModelSerializer):   #  used to get user profile
@@ -140,8 +140,8 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
         request = self.context.get("request")
         validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
         validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
-        prescription = Prescription.objects.create(**validated_data)
-        return prescription
+        Prescription_info = Prescription_info.objects.create(**validated_data)
+        return Prescription_info
 
     def update(self, instance, validated_data):
         instance.medicine_name = validated_data.get('medicine_name', instance.medicine_name)
@@ -153,7 +153,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
         return instance
 
     class Meta:
-        model = Prescription
+        model = Prescription_info
         fields = ('doctor','student','medicine_name','medicine_type','how_to_use','appointment','edit_by')
 
 

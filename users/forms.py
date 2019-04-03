@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Field
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Profile, Appointment,Prescription
+from .models import User, Profile, Appointment,Prescription,Prescription_info
 from default.templatetags.custom_tags import *
 
 class UserCreationform(UserCreationForm):
@@ -66,7 +66,7 @@ class Doctorsform(forms.ModelForm):
             Row(
                 Field('gender', wrapper_class='col-sm-4'),
                 Field('martial_status', wrapper_class='col-sm-4'),
-                Field('blood_type', wrapper_class='col-sm-4'),
+                Field('specialty', wrapper_class='col-sm-4'),
             ),
             Row(
                 Field('designation', wrapper_class='col-sm-4'),
@@ -74,14 +74,15 @@ class Doctorsform(forms.ModelForm):
                 Field('experience', wrapper_class='col-sm-4'),
             ),
             Row(
-                Field('specialty', wrapper_class='col-sm-3'),
-                Field('weight', wrapper_class='col-sm-3'),
-                Field('height', wrapper_class='col-sm-3'),
-                Field('mobile_no', wrapper_class='col-sm-3'),
+
+                Field('weight', wrapper_class='col-sm-4'),
+                Field('height', wrapper_class='col-sm-4'),
+                Field('mobile_no', wrapper_class='col-sm-4'),
             ),
             Row(
                 Field('timing', wrapper_class='col-sm-12'),
                 Field('notes', wrapper_class='col-sm-12'),
+                Field('avatar', wrapper_class='col-sm-12'),
             ),
         )
     class Meta:
@@ -136,6 +137,7 @@ class Studentform(forms.ModelForm):
             ),
             Row(
                 Field('notes', wrapper_class='col-sm-12'),
+                Field('avatar', wrapper_class='col-sm-12'),
             ),
         )
     class Meta:
@@ -214,10 +216,36 @@ class  Prescriptionform(forms.ModelForm):
                     Field('how_to_use', wrapper_class='col-sm-12'),
                 ),
             )
+        self.fields['how_to_use'].widget.attrs['rows'] = 3
     class Meta:
         model  = Prescription
         fields = ['appointment','medicine_name','medicine_type','how_to_use']
 
+
+class  Prescription_info_form(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+
+        appointment_id = kwargs.pop('appointment')
+        super(Prescription_info_form, self).__init__(*args, **kwargs)
+        self.fields['appointment'] = forms.ModelChoiceField(queryset=Appointment.objects.exclude(id__in=Prescription.objects.all().values_list('appointment_id', flat=True)))
+        if appointment_id is not None:
+            self.fields['appointment'] = forms.ModelChoiceField(queryset=Appointment.objects.filter(id=appointment_id), empty_label=None)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+                Row(
+                    Field('appointment', wrapper_class='col-sm-4 hidden'),
+                    Field('medicine_name', wrapper_class='col-sm-6'),
+                    Field('medicine_type', wrapper_class='col-sm-6')
+                ),
+                Row(
+                    Field('how_to_use', wrapper_class='col-sm-12'),
+                ),
+            )
+        self.fields['how_to_use'].widget.attrs['rows'] = 3
+    class Meta:
+        model  = Prescription_info
+        fields = ['appointment','medicine_name','medicine_type','how_to_use']
 
 
         
