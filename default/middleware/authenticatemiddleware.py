@@ -3,6 +3,8 @@ import requests
 from django.shortcuts import render, redirect
 from default.templatetags.custom_tags import getUserGroup
 from django.http import HttpResponseForbidden
+from default.utils import *
+from user.models import Appointment
 
 class AuthenticateMiddleware:
 	exclude_groups = ['Student']
