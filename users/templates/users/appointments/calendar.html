@@ -130,12 +130,9 @@
             },
             eventMouseover: function (data, event, view) {
                 var tooltip = '<div class="tooltiptopicevent">' + 'Student ' + ': ' + data.student + '</br>';
-                {%
-                    if request | isSuperAdmin %}
+                {% if request|isSuperAdmin %}
                 tooltip += 'Doctor: ' + data.doctor + '</br>';
-                {%
-                    endif %
-                }
+                {% endif %}
                 tooltip += 'Created ' + ': ' + data.created + '</br>' + 'Notes ' + ': ' + data.notes + '</div>';
 
 
@@ -173,28 +170,23 @@
                 window.location.assign('/appointments/' + event.id);
             },
             events: [
-            { % for appointment in appointments %
-        }
+            {% for appointment in appointments %}
         {
             start: '{{ appointment.datetime }}',
                     textColor
         :
             '#000',
-            { %
-            if appointment.status == 'N' %}
+            {% if appointment.status == 'N' %}
             title: "App # {{ appointment.id}}",
                     backgroundColor
         :
             '#3a87ad'
-            {% else %
-            }
+            {% else %}
             title: "App # {{ appointment.id}} - Assigned",
                     backgroundColor
         :
             '#5ecd5e'
-            {%
-                endif %
-            }
+            {% endif %}
         ,
             id: '{{appointment.id}}',
                     student
@@ -211,9 +203,7 @@
             '{{appointment.created_date}}',
         }
         ,
-        {%
-            endfor %
-        }
+        {% endfor %}
         ]
     })
         ;

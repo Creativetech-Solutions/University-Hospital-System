@@ -13,6 +13,10 @@ django = "==2.1.7"
 djangorestframework-datatables = "*"
 django-crispy-forms = "*"
 requests = "*"
+pillow = "*"
+django-extra-fields = "*"
+six = "*"
+django-select2 = "*"
 
 [requires]
 python_version = "3.6"

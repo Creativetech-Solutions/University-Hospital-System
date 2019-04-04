@@ -46,6 +46,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" type="text/css" href="{% static 'custom.css' %}">
+<script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
 
 </head>
 <body class="sidebar-mini fixed">
@@ -76,38 +77,37 @@
                 <ul class="top-nav">
                     <!--Notification Menu-->
                     <li class="dropdown notification-menu">
+
+                        {% if request.pharmacist_notify or request.refer_notify %}
                         <a href="#!" data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                             <i class="icon-bell"></i>
-                            <span class="badge badge-danger header-badge">9</span>
+                            <span class="badge badge-danger header-badge">
+                            {{ request.pharmacist_notify.count|add:request.refer_notify.count }}</span>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li class="not-head">You have <b class="text-primary">4</b> new notifications.</li>
+                        {% endif %}
+                        {% if request.pharmacist_notify %}
+                            <ul class="dropdown-menu">
+                            <li class="not-head">You have <b class="text-primary">{{request.pharmacist_notify.count}}</b> prescription notifications.</li>
+                            {% for notify in request.pharmacist_notify %}
                             <li class="bell-notification">
-                                <a href="javascript:;" class="media">
-                              <span class="media-left media-icon">
-                    <img class="img-circle" src="{% static 'assets/images/avatar-1.png' %}" alt="User Image">
-                  </span>
-                                    <div class="media-body"><span class="block">Lisa sent you a mail</span><span class="text-muted block-time">2min ago</span></div>
+                                <a href="/appointments/{{notify.appointment_id}}/" class="media">
+                                <div class="media-body"><span class="block">Pharmacist {{notify.edit_by}} has edit the prescritpion</span>
+                                </div>
                                 </a>
                             </li>
+                            {% endfor %}
+                        {% endif %}
+                        {% if request.refer_notify %}
+                            <li class="not-head">You have <b class="text-primary">{{request.refer_notify.count}}</b> appointment notifications.</li>
+                            {% for notify in request.refer_notify %}
                             <li class="bell-notification">
-                                <a href="javascript:;" class="media">
-                              <span class="media-left media-icon">
-                    <img class="img-circle" src="{% static 'assets/images/avatar-2.png' %}" alt="User Image">
-                  </span>
-                                    <div class="media-body"><span class="block">Server Not Working</span><span class="text-muted block-time">20min ago</span></div>
+                                <a href="/appointments/{{notify.id}}/" class="media">
+                                <div class="media-body"><span class="block">Doctor {{notify.doctor.username}} has refer the appointment</span>
+                                </div>
                                 </a>
-                            </li>
-                            <li class="bell-notification">
-                                <a href="javascript:;" class="media"><span class="media-left media-icon">
-                    <img class="img-circle" src="{% static 'assets/images/avatar-3.png' %}" alt="User Image">
-                  </span>
-                                    <div class="media-body"><span class="block">Transaction xyz complete</span><span class="text-muted block-time">3 hours ago</span></div></a>
-                            </li>
-                            <li class="not-footer">
-                                <a href="#!">See all notifications.</a>
-                            </li>
-                        </ul>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
                     </li>
                     <!-- chat dropdown -->
                     <li class="pc-rheader-submenu hidden ">
@@ -462,7 +462,6 @@
 
 
 
-<script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
 
 <script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
 
@@ -483,7 +482,6 @@
 
 <!-- custom js -->
 <script type="text/javascript" src="{% static 'assets/js/main.min.js' %}"></script>
-
 <!-- Date picker.js -->
 <script src="{% static 'assets/plugins/datepicker/js/moment-with-locales.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.js"></script>
@@ -493,7 +491,6 @@
 {% block footer %}
 
 {% endblock %}
-
 </body>
 
 </html>

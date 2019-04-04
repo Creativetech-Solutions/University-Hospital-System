@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Profile, Appointment,Prescription,Prescription_info
 from default.templatetags.custom_tags import *
+from django_select2.forms import Select2TagWidget
 
 class UserCreationform(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -56,6 +57,7 @@ class Doctorsform(forms.ModelForm):
         
         # self.fields['timing'].widget.attrs['rows'] = 3
         self.fields['notes'].widget.attrs['rows'] = 3
+        self.fields['avatar'] = forms.ImageField(label='Choose Avatar', error_messages = {'invalid':"Image files only"}, widget=forms.FileInput)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
@@ -97,7 +99,6 @@ class Doctorsform(forms.ModelForm):
         model = Profile
         fields = ('user','session_1_start', 'session_1_end', 'session_2_start', 'session_2_end', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no','avatar',
 				'martial_status', 'weight', 'height', 'blood_type', 'notes')
-
 
 class Pharmacyform(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -174,8 +175,9 @@ class Appointmentform(forms.ModelForm):
                     Field('notes', wrapper_class='col-sm-12'),
                 ),
             )
-        self.fields['disease'].widget.attrs['rows'] = 3
-        self.fields['disease'].widget.attrs['placeholder'] = 'Please enter comma separated disease names'
+        # self.fields['disease'].widget.attrs['rows'] = 3
+        # self.fields['disease'].widget.attrs['placeholder'] = 'Please enter comma separated disease names'
+        self.fields['disease'] = forms.MultipleChoiceField(widget=Select2TagWidget)
         self.fields['notes'].widget.attrs['rows'] = 3
         self.fields["datetime"].widget.attrs.update({"id": "date-format"})
         self.fields['student_id'].label = 'Student'

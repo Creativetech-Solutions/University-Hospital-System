@@ -27,7 +27,7 @@ class Profile(models.Model):
 	session_2_end = models.TimeField(null=True, blank=True)
 	avatar = models.CharField(max_length=250, blank=True, null=True)
 
-	avatar = models.ImageField(default='default.png',upload_to='static/media/profile')
+	avatar = models.ImageField(default='default.png',upload_to='profile')
 	MARTIAL_STATUS = (
 		('married', 'Married'),
 		('unmarried', 'Unmarried'),
@@ -76,7 +76,6 @@ class Appointment(models.Model):
 	modified_date = models.DateTimeField(auto_now=True)
 	def __str__(self): # converted obj
 		return f'{self.student.username}- App. # {self.id}'
-
 
 
 class Prescription(models.Model):
