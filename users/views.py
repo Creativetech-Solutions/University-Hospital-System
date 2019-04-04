@@ -24,7 +24,6 @@ from default.utils import *
 from rest_framework.pagination import PageNumberPagination
 from django.views.generic import TemplateView
 
-
 class StandardResultsSetPagination(PageNumberPagination):
 	page_size = 100
 	page_size_query_param = 'page_size'
