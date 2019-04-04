@@ -42,14 +42,34 @@
 <script>
 
     jQuery(document).ready(function($) {
+        var existing_tags = [];
+         {% for tag in tags %}
+            console.log('{{tag}}');
+            console.log('test');
+            existing_tags += '<option value="{{tag}}" selected="selected">{{tag}}</option>';
+        {% endfor %}
        
+        $('#id_disease').html(existing_tags);
+        $('#id_disease').select2();
+
         function saveFormData(url, btnEl, method_type){
            // if( Validate() === true ) {
             var array = btnEl.parents('form').serializeArray();
             var from_data = {};
             jQuery.each(array, function () {
-                from_data[this.name] = this.value || '';
+                if(this.name == 'disease'){
+                    if(from_data[this.name])
+                        from_data[this.name].push(this.value);
+                    else
+                        from_data[this.name] = [this.value];
+                } 
+                else
+                    from_data[this.name] = this.value || '';
             });
+
+            from_data['disease'] = JSON.stringify(from_data['disease'])
+
+            console.log(from_data);
             $.ajax({
                type: method_type,
                url: url,

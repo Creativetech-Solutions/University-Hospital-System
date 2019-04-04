@@ -176,8 +176,13 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
 			time = date_time.strftime('%H:%M:%S')
 			if not Profile.objects.filter((Q(session_1_start__lte=time, session_1_end__gte=time) | Q(session_2_start__lte=time, session_2_end__gte=time)),user_id=doctor_id).exists():
 				raise serializers.ValidationError("Doctor is not available at this time")
-			if Appointment.objects.filter(doctor_id=doctor_id, datetime=date_time).exists():
-				raise serializers.ValidationError("Appointment already exist for given date")
+
+			if self.instance: # for edit case
+				if Appointment.objects.filter(doctor_id=doctor_id, datetime=date_time).exclude(id=self.instance.id).exists():
+					raise serializers.ValidationError("Appointment already exist for given date")
+			else:
+				if Appointment.objects.filter(doctor_id=doctor_id, datetime=date_time).exists():
+					raise serializers.ValidationError("Appointment already exist for given date")
 			print('testing')
 		# raise serializers.ValidationError("Hold down")
 		return super(AppointmentsSerializer, self).validate(data)
