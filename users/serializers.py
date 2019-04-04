@@ -5,7 +5,6 @@ from django.contrib.auth.models import User ,Group
 from django.contrib.auth.hashers import make_password
 from default.utils import *
 from rest_framework.validators import UniqueValidator
-# from drf_extra_fields.fields import Base64ImageField
 import datetime
 from django.db.models import Q
 from django.core.files.base import ContentFile
@@ -40,7 +39,7 @@ class Base64ImageField(serializers.ImageField):
         extension = "jpg" if extension == "jpeg" else extension
 
         return extension
-        
+
     def from_native(self, data):
         if isinstance(data, basestring) and data.startswith('data:image'):
             # base64 encoded image - decode
