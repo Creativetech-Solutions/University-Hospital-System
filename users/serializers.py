@@ -93,15 +93,15 @@ class ProfileSerializer(serializers.ModelSerializer):   #  used to get user prof
 		'martial_status', 'weight', 'height', 'blood_type', 'notes', 'created_date', 'modified_date')
 
 class DoctorsSerializer(serializers.ModelSerializer):   #  used to get user profile
-    user = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.CharField(source='user.email', read_only=True)
-    first_name = serializers.CharField(source='user.first_name', read_only=True)
-    last_name = serializers.CharField(source='user.last_name', read_only=True)
-    is_active=serializers.CharField(source='user.is_active', read_only=True)
-    class Meta:
-        model = Profile
-        fields = ('user_id','user','title','last_name','first_name','email', 'is_active', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no', 'timing', 'avatar',
-        'martial_status', 'weight', 'height', 'notes', 'created_date', 'modified_date')
+	user = serializers.CharField(source='user.username', read_only=True)
+	email = serializers.CharField(source='user.email', read_only=True)
+	first_name = serializers.CharField(source='user.first_name', read_only=True)
+	last_name = serializers.CharField(source='user.last_name', read_only=True)
+	is_active=serializers.CharField(source='user.is_active', read_only=True)
+	class Meta:
+		model = Profile
+		fields = ('user_id','user','title','last_name','first_name','email', 'is_active', 'gender', 'designation', 'qualification', 'experience', 'primary_hospital', 'secondary_hospital', 'specialty', 'mobile_no', 'timing', 'avatar',
+		'martial_status', 'weight', 'height', 'notes', 'created_date', 'modified_date')
 	user = serializers.CharField(source='user.username', read_only=True)
 	email = serializers.CharField(source='user.email', read_only=True)
 	first_name = serializers.CharField(source='user.first_name', read_only=True)
@@ -164,12 +164,12 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
 	medicine_type = serializers.CharField(source='medicine_type.name', read_only=True)
 	def create(self, validated_data):
 
-        # Create the object instance...
-        request = self.context.get("request")
-        validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
-        validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
-        Prescription_info = Prescription_info.objects.create(**validated_data)
-        return Prescription_info
+		# Create the object instance...
+		request = self.context.get("request")
+		validated_data['appointment'] = Appointment.objects.get(id=request.data['appointment'])
+		validated_data['medicine_type'] = MedicineType.objects.get(id=request.data['medicine_type'])
+		Prescription_info = Prescription_info.objects.create(**validated_data)
+		return Prescription_info
 
 	def update(self, instance, validated_data):
 		instance.medicine_name = validated_data.get('medicine_name', instance.medicine_name)
@@ -180,9 +180,9 @@ class PrescriptionSerializer(serializers.ModelSerializer):   #  used to get user
 		instance.save()
 		return instance
 
-    class Meta:
-        model = Prescription_info
-        fields = ('doctor','student','medicine_name','medicine_type','how_to_use','appointment','edit_by')
+	class Meta:
+		model = Prescription_info
+		fields = ('doctor','student','medicine_name','medicine_type','how_to_use','appointment','edit_by')
 
 
 
