@@ -13,6 +13,10 @@ django = "==2.1.7"
 djangorestframework-datatables = "*"
 django-crispy-forms = "*"
 requests = "*"
+django-tags-input = "*"
+django-tagulous = {extras = ["i18n"],version = "*"}
+coreapi = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.6"
