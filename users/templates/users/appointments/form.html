@@ -76,9 +76,26 @@
                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                data: JSON.stringify(from_data),
                success: function (data) {
-                   // $.toaster({ priority : 'success', title : 'Status', message : 'User Status Updated!'});
+                   $.toaster({ priority : 'success', title : 'Success', message : 'Appointment Updated!'});
+
                    window.location.href = "{% url 'appointments_listing' %}";
 
+                },
+
+                error:function(data){
+                    data = data.responseJSON;
+                    message = '';
+                    try{
+                        if(typeof data['non_field_errors'] !== 'undefined'){
+                            message += '<br>'+data['non_field_errors'][0];
+                        }
+                        if(typeof data['disease'] !== 'undefined'){
+                            message += '<br>Disease:'+data['disease'][0];
+                        }
+                        $.toaster({ priority : 'danger', title : 'Error', message : message});
+                    } catch(e) {
+                        $.toaster({priority: 'danger', title: 'Error', message:'Error Occur!' });
+                    }
                 }
             });
         }

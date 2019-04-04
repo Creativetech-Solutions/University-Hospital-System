@@ -59,8 +59,8 @@ class GroupSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):   #  used to get user profile
 	groups = GroupSerializer(many=True, read_only=True)
 	id = serializers.IntegerField(read_only=True)
-	password1 = serializers.CharField(write_only=True)
-	password2 = serializers.CharField(write_only=True)
+	password1 = serializers.CharField(read_only=True)
+	password2 = serializers.CharField(read_only=True)
 	username = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())], max_length=150)
 	email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
 	# add role base profile fields here
