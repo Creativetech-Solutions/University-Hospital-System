@@ -50,6 +50,9 @@
 {% block footer %}
 <script>
     jQuery(document).ready(function($) {
+        // add image tag to show choosen avatar
+        $('#id_avatar').before('<img class="img-responsive col-sm-1" id="avatar" src="{{user_obj.profile.avatar.url}}" />');
+        avatar_url = null;
         function Validate() {
             var password = document.getElementById("id_password1").value;
             var confirmPassword = document.getElementById("id_password2").value;
@@ -60,6 +63,19 @@
             }
 
             return true;
+        }
+        function readFile() {
+          if (this.files && this.files[0]) {
+            var FR= new FileReader();
+            FR.addEventListener("load", function(e) {
+              document.getElementById("avatar").src = e.target.result;
+              $('#avatar').show();
+              avatar_url = e.target.result;
+            }); 
+            
+            FR.readAsDataURL( this.files[0] );
+          }
+          
         }
         function saveFormData(url, btnEl, method_type){
            // if( Validate() === true ) {
@@ -72,6 +88,7 @@
             jQuery.each(array, function () {
                 from_data[this.name] = this.value || '';
             });
+            from_data['avatar'] = avatar_url;
             $.ajax({
                type: method_type,
                url: url,
@@ -109,6 +126,8 @@
             {% endif %}
             saveFormData(profile_url, $(this), method_type);
         })
+
+        document.getElementById("id_avatar").addEventListener("change", readFile);
     });
 </script>
 {% endblock %}

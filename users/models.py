@@ -76,7 +76,6 @@ class Appointment(models.Model):
 		return f'{self.student.username}- App. # {self.id}'
 
 
-
 class Prescription(models.Model):
 	appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, primary_key=True)
 	how_to_use = models.TextField(blank=True, null=True)

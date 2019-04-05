@@ -52,3 +52,6 @@ a.tabledit-edit-button.btn.btn-primary.waves-effect.waves-light {
 .user-block-2{
     padding: 5px 0;
 }
+.main-header-top .top-nav .notification-menu .dropdown-menu {
+    max-height: 300px;
+    overflow-y: scroll;}

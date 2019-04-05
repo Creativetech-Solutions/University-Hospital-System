@@ -131,7 +131,7 @@
             eventMouseover: function (data, event, view) {
                 var tooltip = '<div class="tooltiptopicevent">' + 'Student ' + ': ' + data.student + '</br>';
                 {% if request|isSuperAdmin %}
-                    tooltip += 'Doctor: ' + data.doctor + '</br>';
+                tooltip += 'Doctor: ' + data.doctor + '</br>';
                 {% endif %}
                 tooltip += 'Created ' + ': ' + data.created + '</br>' + 'Notes ' + ': ' + data.notes + '</div>';
 

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'default.apps.DefaultConfig',
     'hospital.apps.HospitalConfig',
     'rest_framework_datatables',
-    'crispy_forms'
+    'crispy_forms',
+    'django_select2'
 
 ]
 REST_FRAMEWORK = {
@@ -169,7 +170,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_ROOT =os.path.join(BASE_DIR,'static/media') #os operating system
+MEDIA_ROOT =os.path.join(BASE_DIR,'media') #os operating system
 MEDIA_URL  ='/media/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
