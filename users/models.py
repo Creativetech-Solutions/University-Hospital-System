@@ -25,7 +25,7 @@ class Profile(models.Model):
 	session_1_end = models.TimeField(null=True, blank=True)
 	session_2_start = models.TimeField(null=True, blank=True)
 	session_2_end = models.TimeField(null=True, blank=True)
-	avatar = models.ImageField(default='default.png',upload_to='static/media/profile')
+	avatar = models.ImageField(default='default.png',upload_to='profile')
 	MARTIAL_STATUS = (
 		('married', 'Married'),
 		('unmarried', 'Unmarried'),
