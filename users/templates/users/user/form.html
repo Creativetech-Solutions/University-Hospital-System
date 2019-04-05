@@ -57,8 +57,7 @@
             var password = document.getElementById("id_password1").value;
             var confirmPassword = document.getElementById("id_password2").value;
             if (password != confirmPassword) {
-                $("#error").text("Passwords do not match.");
-                // we will update validation for rest frame work latter
+                $.toaster({priority: 'danger', title: 'Error', message:'Password and Confirm Password mismatched' });
                 return false;
             }
 
@@ -78,7 +77,7 @@
           
         }
         function saveFormData(url, btnEl, method_type){
-           // if( Validate() === true ) {
+           if( !Validate()) return false;
 
             // check for required fields
             if(!checkRequiredFields(btnEl.parents('form'))) return false;
@@ -95,12 +94,28 @@
                headers: {'Authorization': "Token {{request|getToken}}", 'Content-Type': 'application/json'},
                data: JSON.stringify(from_data),
                success: function (data) {
-                   $.toaster({priority: 'success', title: 'Status', message: 'User Info Updated!'});
+                   $.toaster({priority: 'success', title: 'Success', message:'User Info Updated!' });
                     if(btnEl.hasClass('next')){
                         $('a[href="#user_profile"]').tab('show');
                     }
                     else{
                         //window.location.href = "{% url 'users_listing' %}";
+                    }
+                },
+                error:function(data){
+                    data = data.responseJSON;
+                    message = '';
+                    try{
+                        if(typeof data['email'] !== 'undefined'){
+                            message += '<br>Email: '+data['email'][0];
+                        }
+                        
+                        if(typeof data['username'] !== 'undefined'){
+                            message += '<br>Username: '+data['username'][0];
+                        }
+                        $.toaster({ priority : 'danger', title : 'Error', message : message});
+                    } catch(e) {
+                        $.toaster({priority: 'danger', title: 'Error', message:'Error Occur!' });
                     }
                 }
             });

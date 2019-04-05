@@ -59,8 +59,8 @@ class GroupSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):   #  used to get user profile
 	groups = GroupSerializer(many=True, read_only=True)
 	id = serializers.IntegerField(read_only=True)
-	password1 = serializers.CharField(write_only=True)
-	password2 = serializers.CharField(write_only=True)
+	password1 = serializers.CharField(read_only=True)
+	password2 = serializers.CharField(read_only=True)
 	username = serializers.CharField(validators=[UniqueValidator(queryset=User.objects.all())], max_length=150)
 	email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
 	# add role base profile fields here
@@ -176,8 +176,13 @@ class AppointmentsSerializer(serializers.ModelSerializer):   #  used to get user
 			time = date_time.strftime('%H:%M:%S')
 			if not Profile.objects.filter((Q(session_1_start__lte=time, session_1_end__gte=time) | Q(session_2_start__lte=time, session_2_end__gte=time)),user_id=doctor_id).exists():
 				raise serializers.ValidationError("Doctor is not available at this time")
-			if Appointment.objects.filter(doctor_id=doctor_id, datetime=date_time).exists():
-				raise serializers.ValidationError("Appointment already exist for given date")
+
+			if self.instance: # for edit case
+				if Appointment.objects.filter(doctor_id=doctor_id, datetime=date_time).exclude(id=self.instance.id).exists():
+					raise serializers.ValidationError("Appointment already exist for given date")
+			else:
+				if Appointment.objects.filter(doctor_id=doctor_id, datetime=date_time).exists():
+					raise serializers.ValidationError("Appointment already exist for given date")
 			print('testing')
 		# raise serializers.ValidationError("Hold down")
 		return super(AppointmentsSerializer, self).validate(data)

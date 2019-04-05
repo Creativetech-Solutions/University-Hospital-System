@@ -197,6 +197,7 @@ def edit_appointment(request, id):
 		'form' : form,
 		'app':'appointment',
 		'obj':instance,
+		'tags':json.loads(instance.disease),
 		'type':'PUT',
 		'app_url':'appointments',
 		'redirect':'appointments-list'
