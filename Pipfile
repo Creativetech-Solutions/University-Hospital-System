@@ -9,7 +9,7 @@ verify_ssl = true
 djangorestframework = "*"
 mysqlclient = {path = "./mysqlclient-1.4.2-cp36-cp36m-win32.whl"}
 pygments = "*"
-django = "==2.1.7"
+django = "==2.1.11"
 djangorestframework-datatables = "*"
 django-crispy-forms = "*"
 requests = "*"
